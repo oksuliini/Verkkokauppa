@@ -12,26 +12,28 @@
 	$errflag = false;
 	
 	//Connect to mysql server
-	$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
-	if(!$link) {
-		die('Failed to connect to server: ' . mysql_error());
-	}
+	$link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_DATABASE);
+if (!$link) {
+    die('Failed to connect to server: ' . mysqli_connect_error());
+}
+
 	
 	//Function to sanitize values received from the form. Prevents SQL injection
 	function clean($str) {
 		$str = stripslashes($str);
         return mysqli_real_escape_string($link,$str);
-
+	}
 	
 	//Sanitize the POST values
-	$first_name = clean($link,$_POST['first_name']);
-	$last_name = clean($link,$_POST['last_name']);
-	$email = clean($link,$_POST['email']);
-    $phone = clean($link,$_POST['phone']);
-    $address = clean($link,$_POST['address']);
-	$username = clean($link,$_POST['username']);
-	$password = clean($link,$_POST['password']);
-	$cpassword = clean($link,$_POST['cpassword']);
+	$first_name = isset($_POST['first_name']) ? clean($link, $_POST['first_name']) : '';
+
+	$last_name = isset($_POST['first_name']) ? clean($link,$_POST['last_name']) : '';
+	$email = isset($_POST['first_name']) ? clean($link,$_POST['email']) : '';
+    $phone = isset($_POST['first_name']) ? clean($link,$_POST['phone']) : '';
+    $address = isset($_POST['first_name']) ? clean($link,$_POST['address']) : '';
+	$username = isset($_POST['first_name']) ? clean($link,$_POST['username']) : '';
+	$password = isset($_POST['first_name']) ? clean($link,$_POST['password']) : '';
+	$cpassword = isset($_POST['first_name']) ? clean($link,$_POST['cpassword']) : '';
 	
 	//Input Validations
 	if($first_name == '') {
