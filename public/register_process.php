@@ -19,21 +19,20 @@ if (!$link) {
 
 	
 	//Function to sanitize values received from the form. Prevents SQL injection
-	function clean($str) {
+	function clean($link,$str) {
 		$str = stripslashes($str);
         return mysqli_real_escape_string($link,$str);
 	}
 	
 	//Sanitize the POST values
 	$first_name = isset($_POST['first_name']) ? clean($link, $_POST['first_name']) : '';
-
-	$last_name = isset($_POST['first_name']) ? clean($link,$_POST['last_name']) : '';
-	$email = isset($_POST['first_name']) ? clean($link,$_POST['email']) : '';
-    $phone = isset($_POST['first_name']) ? clean($link,$_POST['phone']) : '';
-    $address = isset($_POST['first_name']) ? clean($link,$_POST['address']) : '';
-	$username = isset($_POST['first_name']) ? clean($link,$_POST['username']) : '';
-	$password = isset($_POST['first_name']) ? clean($link,$_POST['password']) : '';
-	$cpassword = isset($_POST['first_name']) ? clean($link,$_POST['cpassword']) : '';
+	$last_name = isset($_POST['last_name']) ? clean($link,$_POST['last_name']) : '';
+	$email = isset($_POST['email']) ? clean($link,$_POST['email']) : '';
+    $phone = isset($_POST['phone']) ? clean($link,$_POST['phone']) : '';
+    $address = isset($_POST['address']) ? clean($link,$_POST['address']) : '';
+	$username = isset($_POST['username']) ? clean($link,$_POST['username']) : '';
+	$password = isset($_POST['password']) ? clean($link,$_POST['password']) : '';
+	$cpassword = isset($_POST['cpassword']) ? clean($link,$_POST['cpassword']) : '';
 	
 	//Input Validations
 	if($first_name == '') {
@@ -75,7 +74,7 @@ if (!$link) {
 	
 	//Check for duplicate login ID
 	if($username != '') {
-		$qry = "SELECT * FROM Users WHERE username='$username'";
+		$qry = "SELECT * FROM users WHERE username='$username'";
 		$result = mysqli_query($link,$qry);
 		if($result) {
 			if(mysqli_num_rows($result) > 0) {
@@ -85,7 +84,7 @@ if (!$link) {
 			@mysqli_free_result($result);
 		}
 		else {
-			die("Query failed" . mysqli_error($link);
+			die("Query failed" . mysqli_error($link));
 		}
 	}
 	
@@ -98,7 +97,7 @@ if (!$link) {
 	}
 
 	//Create INSERT query
-	$qry = "INSERT INTO Users(firstname, lastname, email, phone, address, username, passwd) VALUES('$first_name','$last_name','$email','$phone','$address','$username','".md5($password)."')";
+	$qry = "INSERT INTO users(first_name, last_name, email, phone, address, username, password) VALUES('$first_name','$last_name','$email','$phone','$address','$username','".md5($password)."')";
 	$result = @mysqli_query($link,$qry);
 	
 	//Check whether the query was successful or not
