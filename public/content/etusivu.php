@@ -17,4 +17,6 @@
         <h2>Hello Kitty Muki</h2>
         <p>Hinta: 14,99 €</p>
     </div>
+    
 </div>
+<a href="content/profile.php" >Your Profile</a>
