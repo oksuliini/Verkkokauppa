@@ -10,7 +10,7 @@ if (!$link) {
 
 // Get the submitted username and password
 $username = isset($_POST['username']) ? mysqli_real_escape_string($link, $_POST['username']) : '';
-$password = isset($_POST['password']) ? $_POST['password'] : '';
+$password = isset($_POST['password']) ? $link, $_POST['password'] : '';
 
 if ($username == '' || $password == '') {
     $_SESSION['ERRMSG_ARR'] = ['Username or Password is missing'];
