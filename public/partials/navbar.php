@@ -1,119 +1,81 @@
+
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-pink navbar-light" style="background-color: #ffccd5; font-family: 'Comic Sans MS', cursive;">
   <!-- Container wrapper -->
   <div class="container-fluid">
+
+    <!-- Navbar brand -->
+    <a class="navbar-brand" href="#">
+      <img src="images/kitty-logo.png" alt="Hello Kitty" style="height: 40px;"> <!-- Lisää sopiva logo -->
+    </a>
+
     <!-- Toggle button -->
-    <button
-      data-mdb-collapse-init
-      class="navbar-toggler"
-      type="button"
-      data-mdb-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <i class="fas fa-bars"></i>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars" style="color: white;"></i>
     </button>
-    
 
     <!-- Collapsible wrapper -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <!-- Navbar brand -->
-      <a class="navbar-brand mt-2 mt-lg-0" href="#">
-        <img
-          src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
-          height="15"
-          alt="MDB Logo"
-          loading="lazy"
-        />
-      </a>
-      <!-- Left links -->
+    <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        
+        <!-- Home -->
         <li class="nav-item">
-          <a class="nav-link" href="#">Dashboard</a>
+          <a class="nav-link text-white" href="#">Home</a>
         </li>
+
+        <!-- Shop -->
         <li class="nav-item">
-          <a class="nav-link" href="#">Team</a>
+          <a class="nav-link text-white" href="#">Shop</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Projects</a>
+
+        <!-- Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Categories
+          </a>
+          <!-- Dropdown menu -->
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Plush Toys</a></li>
+            <li><a class="dropdown-item" href="#">Accessories</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Special Edition</a></li>
+          </ul>
+        </li>
+        
+      </ul>
+
+      <!-- Icons -->
+      <ul class="navbar-nav d-flex flex-row me-1">
+        <li class="nav-item me-3">
+          <a class="nav-link text-white" href="#"><i class="fas fa-shopping-cart"></i></a>
         </li>
       </ul>
-      <!-- Left links -->
-    </div>
-    <!-- Collapsible wrapper -->
 
-    <!-- Right elements -->
-    <div class="d-flex align-items-center">
-      <!-- Icon -->
-      <a class="text-reset me-3" href="#">
-        <i class="fas fa-shopping-cart"></i>
-      </a>
-
-      <!-- Notifications -->
-      <div class="dropdown">
-        <a
-          data-mdb-dropdown-init
-          class="text-reset me-3 dropdown-toggle hidden-arrow"
-          href="#"
-          id="navbarDropdownMenuLink"
-          role="button"
-          aria-expanded="false"
-        >
-          <i class="fas fa-bell"></i>
-          <span class="badge rounded-pill badge-notification bg-danger">1</span>
-        </a>
-        <ul
-          class="dropdown-menu dropdown-menu-end"
-          aria-labelledby="navbarDropdownMenuLink"
-        >
-          <li>
-            <a class="dropdown-item" href="#">Some news</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Another news</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </li>
-        </ul>
-      </div>
-      <!-- Avatar -->
-      <div class="dropdown">
-        <a
-          data-mdb-dropdown-init
-          class="dropdown-toggle d-flex align-items-center hidden-arrow"
-          href="#"
-          id="navbarDropdownMenuAvatar"
-          role="button"
-          aria-expanded="false"
-        >
-          <img
-            src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
-            class="rounded-circle"
-            height="25"
-            alt="Black and White Portrait of a Man"
-            loading="lazy"
-          />
-        </a>
-        <ul
-          class="dropdown-menu dropdown-menu-end"
-          aria-labelledby="navbarDropdownMenuAvatar"
-        >
-          <li>
-            <a class="dropdown-item" href="#">My profile</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Settings</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Logout</a>
-          </li>
-        </ul>
-      </div>
+      <!-- Search -->
+      <form class="d-flex">
+        <input type="search" class="form-control" placeholder="Search Hello Kitty" aria-label="Search" style="border-radius: 20px;">
+        <button class="btn btn-white" type="submit"><i class="fas fa-search"></i></button>
+      </form>
     </div>
-    <!-- Right elements -->
   </div>
   <!-- Container wrapper -->
 </nav>
 <!-- Navbar -->
+
+<style>
+  .bg-pink {
+    background-color: #ffccd5 !important;
+  }
+  .text-white {
+    color: #ffffff !important;
+  }
+  .btn-white {
+    background-color: #ffffff;
+    border: 1px solid #ff6f91;
+    color: #ff6f91;
+  }
+  .btn-white:hover {
+    background-color: #ff6f91;
+    color: #ffffff;
+  }
+</style>
