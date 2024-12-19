@@ -1,5 +1,5 @@
 <?php
-$pages = array("etusivu", "tuotteet", "yhteystiedot");
+$pages = array("etusivu", "cart", "checkout", "profile", "login", "logout", "product", "register", "login_process", "register_process", "update_profile");
 $page = "etusivu";
 
 if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
