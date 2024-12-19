@@ -1,10 +1,21 @@
 <?php
-$pages = array("etusivu", "cart", "checkout", "profile", "login", "logout", "product", "register", "login_process", "register_process", "update_profile");
+$pages = array(
+    "etusivu", "cart", "checkout", "profile", "login", "logout", "product", "register",
+    "login_process", "register_process", "update_profile",
+    "admin_profile", "admin_dashboard", "admin_products", "admin_categories"
+);
 $page = "etusivu";
 
 if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
     $page = $_GET['page'];
+    // Check if the page is admin-related and user has admin privileges
+    if (strpos($page, 'admin_') === 0 && (!isset($role) || $role !== 'admin')) {
+        header("Location: content/403.php");
+        exit();
+    }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fi">
@@ -25,7 +36,7 @@ if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
 
     <div class="content">
         <?php
-        $contentFile = "content/" . $page . ".php";
+        $contentFile = "content/"  . $page . ".php";
         if (file_exists($contentFile)) {
             include($contentFile);
         } else {

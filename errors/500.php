@@ -15,6 +15,6 @@ http_response_code(500);
 <body>
     <h1>500 - Palvelinvirhe</h1>
     <p>Tapahtui odottamaton virhe. Yritä uudelleen myöhemmin.</p>
-    <a href="/public/index.php">Palaa etusivulle</a>
+    <a href="../public/index.php">Palaa etusivulle</a>
 </body>
 </html>

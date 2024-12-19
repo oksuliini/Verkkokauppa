@@ -1,7 +1,6 @@
 <?php
+require_once('../../config/config.php');
 session_start();
-require_once('config.php');
-
 // Check if the user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
     header("Location: login.php");
@@ -15,6 +14,7 @@ $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_DATABASE);
 if (!$link) {
     die('Failed to connect to server: ' . mysqli_connect_error());
 }
+
 
 // Fetch user details from the database
 $query = "SELECT first_name, last_name, email FROM users WHERE user_id = ?";

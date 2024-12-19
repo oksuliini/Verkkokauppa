@@ -1,6 +1,3 @@
-<?php
-	session_start();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,17 +8,17 @@
 </head>
 <body>
 <?php
-	if( isset($_SESSION['ERRMSG_ARR']) && is_array($_SESSION['ERRMSG_ARR']) && count($_SESSION['ERRMSG_ARR']) >0 ) {
-		echo '<ul class="err">';
-		foreach($_SESSION['ERRMSG_ARR'] as $msg) {
-			echo '<li>',$msg,'</li>'; 
-		}
-		echo '</ul>';
-		unset($_SESSION['ERRMSG_ARR']);
-	}
+    if( isset($_SESSION['ERRMSG_ARR']) && is_array($_SESSION['ERRMSG_ARR']) && count($_SESSION['ERRMSG_ARR']) >0 ) {
+        echo '<ul class="err">';
+        foreach($_SESSION['ERRMSG_ARR'] as $msg) {
+            echo '<li>',$msg,'</li>'; 
+        }
+        echo '</ul>';
+        unset($_SESSION['ERRMSG_ARR']);
+    }
 ?>
 <h1>Register new user</h1>
-<form id="register-form" name="registerform" method="post" action="register_process.php">
+<form id="register-form" name="registerform" method="post" action="index.php?page=register_process">
   <table width="300" border="0" align="center" cellpadding="2" cellspacing="0">
     <tr>
       <th>First Name </th>
