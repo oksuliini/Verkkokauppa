@@ -1,27 +1,15 @@
 <?php
-	session_start();
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register user</title>
-<link href="loginmodule.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
-<?php
-	if( isset($_SESSION['ERRMSG_ARR']) && is_array($_SESSION['ERRMSG_ARR']) && count($_SESSION['ERRMSG_ARR']) >0 ) {
-		echo '<ul class="err">';
-		foreach($_SESSION['ERRMSG_ARR'] as $msg) {
-			echo '<li>',$msg,'</li>'; 
-		}
-		echo '</ul>';
-		unset($_SESSION['ERRMSG_ARR']);
-	}
+    if( isset($_SESSION['ERRMSG_ARR']) && is_array($_SESSION['ERRMSG_ARR']) && count($_SESSION['ERRMSG_ARR']) >0 ) {
+        echo '<ul class="err">';
+        foreach($_SESSION['ERRMSG_ARR'] as $msg) {
+            echo '<li>',$msg,'</li>'; 
+        }
+        echo '</ul>';
+        unset($_SESSION['ERRMSG_ARR']);
+    }
 ?>
 <h1>Register new user</h1>
-<form id="register-form" name="registerform" method="post" action="register_process.php">
+<form id="register-form" name="registerform" method="post" action="index.php?page=register_process">
   <table width="300" border="0" align="center" cellpadding="2" cellspacing="0">
     <tr>
       <th>First Name </th>
@@ -63,9 +51,7 @@
       <td>
       <b>Already a user?</b>
         <td>
-        <a href='login.php' >Click here!</a>
+        <a href='index.php?page=login' >Click here!</a>
     </tr>
   </table>
 </form>
-</body>
-</html>

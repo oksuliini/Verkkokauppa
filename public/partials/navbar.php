@@ -4,7 +4,7 @@
   <div class="container-fluid">
 
     <!-- Navbar brand -->
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="index.php?page=etusivu">
       <img src="images/kitty-logo.png" alt="Hello Kitty" style="height: 40px;"> <!-- Lisää sopiva logo -->
     </a>
 
@@ -17,14 +17,11 @@
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         
-        <!-- Home -->
-        <li class="nav-item">
-          <a class="nav-link text-white" href="#">Home</a>
-        </li>
+      
 
         <!-- Shop -->
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Shop</a>
+          <a class="nav-link text-white" href="index.php?page=product">Shop</a>
         </li>
 
         <!-- Dropdown -->
@@ -55,7 +52,13 @@
         <input type="search" class="form-control" placeholder="Search Hello Kitty" aria-label="Search" style="border-radius: 20px;">
         <button class="btn btn-white ms-2" type="submit"><i class="fas fa-search"></i></button>
         <!-- Profile Icon -->
-        <a href="content/profile.php" class="btn btn-white ms-2">
+        <?php
+        $profileUrl = "index.php?page=profile"; // Default profile URL for regular users
+        if (isset($_SESSION['SESS_ROLE']) && $_SESSION['SESS_ROLE'] === 'admin') {
+            $profileUrl = "index.php?page=admin_profile"; // Admin profile URL
+        }
+        ?>
+        <a href="<?php echo $profileUrl; ?>" class="btn btn-white ms-2">
           <i class="fas fa-user-circle" style="font-size: 1.5rem; color: #ff6f91;"></i>
         </a>
       </form>

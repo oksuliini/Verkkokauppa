@@ -13,8 +13,8 @@ http_response_code(403);
     </style>
 </head>
 <body>
-    <h1>403 - Pääsy kielletty</h1>
-    <p>Sinulla ei ole oikeuksia käyttää tätä sivua.</p>
-    <a href="/public/index.php">Palaa etusivulle</a>
+    <h1>403 - Pääsy kielletty</h1>.</p>
+    <h1>Sinulla ei ole oikeuksia käyttää tätä sivua</h1>
+    <a href="../public/index.php">Palaa etusivulle</a>
 </body>
 </html>

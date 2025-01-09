@@ -1,11 +1,6 @@
 <?php
-// Start session
 session_start();
-
-// Include database connection details
-require_once('config.php');
-
-// Array to store validation errors
+require_once('../../config.php');
 $errmsg_arr = array();
 
 // Validation error flag
@@ -33,7 +28,6 @@ $username = isset($_POST['username']) ? clean($link, $_POST['username']) : '';
 $password = isset($_POST['password']) ? clean($link, $_POST['password']) : '';
 $cpassword = isset($_POST['cpassword']) ? clean($link, $_POST['cpassword']) : '';
 
-// Input Validations
 if ($first_name == '') $errmsg_arr[] = 'First name missing';
 if ($last_name == '') $errmsg_arr[] = 'Last name missing';
 if ($email == '') $errmsg_arr[] = 'Email missing';
@@ -63,7 +57,7 @@ if ($username != '') {
 if ($errflag) {
     $_SESSION['ERRMSG_ARR'] = $errmsg_arr;
     session_write_close();
-    header("location: register.php");
+    header("location: ../index.php?page=register");
     exit();
 }
 
@@ -76,7 +70,7 @@ $result = mysqli_query($link, $qry);
 
 // Check whether the query was successful or not
 if ($result) {
-    header("location: login.php"); // Redirect to success page
+    header("location: ../index.php?page=login.php"); // Redirect to success page
     exit();
 } else {
     die("Query failed" . mysqli_error($link));
