@@ -1,7 +1,5 @@
 <?php
-require_once('../../config/config.php');
-session_start();
 session_destroy(); // Destroy all session data
-header("Location: login.php");
+header("Location: index.php?page=login");
 exit();
 ?>

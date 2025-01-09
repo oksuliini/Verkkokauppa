@@ -1,17 +1,19 @@
 <?php
+require_once('../config/config.php');
+session_start();
 $pages = array(
     "etusivu", "cart", "checkout", "profile", "login", "logout", "product", "register",
     "login_process", "register_process", "update_profile",
-    "admin_profile", "admin_dashboard", "admin_products", "admin_categories"
+    "admin_profile", "add_product"
 );
 $page = "etusivu";
 
 if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
     $page = $_GET['page'];
-    // Check if the page is admin-related and user has admin privileges
-    if (strpos($page, 'admin_') === 0 && (!isset($role) || $role !== 'admin')) {
-        header("Location: content/403.php");
-        exit();
+    $restrictedPages = ["cart", "checkout", "profile", "update_profile"];
+    if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
+        header("Location: index.php?page=login");
+        exit(); // Stop further execution
     }
 }
 

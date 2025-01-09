@@ -4,7 +4,7 @@ require_once('../../config/config.php');
 
 // Check if the user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
-    header("Location: login.php");
+    header("Location: index.php?page=login");
     exit();
 }
 
@@ -88,6 +88,6 @@ mysqli_close($link);
     </form>
 
     <br><br>
-    <a href="profile.php">Back to Profile</a>
+    <a href="index.php?page=etusivu">Back to Profile</a>
 </body>
 </html>

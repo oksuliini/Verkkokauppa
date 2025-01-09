@@ -37,7 +37,7 @@ if ($password == '') {
 if ($errflag) {
     $_SESSION['ERRMSG_ARR'] = $errmsg_arr;
     session_write_close();
-    header("location: login.php");
+    header("location: ../index.php?page=login");
     exit();
 }
 
@@ -56,27 +56,26 @@ if ($result && mysqli_num_rows($result) == 1) {
         $_SESSION['SESS_EMAIL'] = $user['email'];
         if ($user['role'] === 'admin') {
             $_SESSION['SESS_ROLE'] = 'admin';
-            header("Location: admin_profile.php");
+            header("Location: ../index.php?page=admin_profile");
             exit();
         } else {
             $_SESSION['SESS_ROLE'] = 'user';
-            header("Location: profile.php");
+            header("Location: ../index.php?page=profile");
             exit();
         }
-        
         session_write_close();
-        header("location: ../index.php");
+        header("location: ../index.php?page=etusivu");
         exit();
     } else {
         // Incorrect password
         $_SESSION['ERRMSG_ARR'] = ['Invalid password'];
-        header("location: login.php");
+        header("location: ../index.php?page=login");
         exit();
     }
 } else {
     // No such username found
     $_SESSION['ERRMSG_ARR'] = ['Invalid username '];
-    header("location: login.php");
+    header("location: ../index.php?page=login");
     exit();
 }
 

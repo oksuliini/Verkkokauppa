@@ -1,14 +1,9 @@
 <?php
-session_start();
-require_once('../../config/config.php');
 if ($_SESSION['SESS_ROLE'] !== 'admin') {
-    header("Location: ../../errors/403.php");
+    header("Location: errors/403.php");
     exit();
 }
-$link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_DATABASE);
-if (!$link) {
-    die('Failed to connect to server: ' . mysqli_connect_error());
-}
+$link = getDbConnection();
 $user_id = $_SESSION['SESS_USER_ID'];
 $query = "SELECT first_name, last_name, email FROM users WHERE user_id = ?";
 $stmt = $link->prepare($query);
@@ -53,31 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <h2>Change Your Password</h2>
     <p>If you want to change your password, click the button below:</p>
-    <form action="update_profile.php" method="get">
+    <form action="index.php?page=update_profile" method="get">
         <button type="submit">Update Password</button>
     </form>
 
-    <form action="logout.php" method="post">
+    <form action="index.php?page=logout" method="post">
         <button type="submit">Logout</button>
     </form>
+    <h2><a href="index.php?page=add_product">Add Products</a><h2>
 
-    <!-- Tuotehallinnan lomake -->
-    <h2>Add a New Product</h2>
-    <form action="admin_profile.php" method="POST">
-        <label for="name">Product Name:</label>
-        <input type="text" id="name" name="name" required><br>
-
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea><br>
-
-        <label for="price">Price:</label>
-        <input type="number" step="0.01" id="price" name="price" required><br>
-
-        <label for="stock">Stock:</label>
-        <input type="number" id="stock" name="stock" required><br>
-
-        <button type="submit">Add Product</button>
-    </form>
     <?php if (isset($product_message)) echo "<p>$product_message</p>"; ?>
 </body>
 </html>

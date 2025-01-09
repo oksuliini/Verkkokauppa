@@ -57,7 +57,7 @@ if ($username != '') {
 if ($errflag) {
     $_SESSION['ERRMSG_ARR'] = $errmsg_arr;
     session_write_close();
-    header("location: register.php");
+    header("location: ../index.php?page=register");
     exit();
 }
 
@@ -70,7 +70,7 @@ $result = mysqli_query($link, $qry);
 
 // Check whether the query was successful or not
 if ($result) {
-    header("location: login.php"); // Redirect to success page
+    header("location: ../index.php?page=login.php"); // Redirect to success page
     exit();
 } else {
     die("Query failed" . mysqli_error($link));
