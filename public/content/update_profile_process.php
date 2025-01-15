@@ -1,4 +1,6 @@
 <?php
+session_start();
+require_once('../../config/config.php');
 
 // Check if the user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
@@ -11,12 +13,12 @@ $user_id = $_SESSION['SESS_USER_ID'];
 // Connect to the database
 $link = getDbConnection();
 
-// Fetch user details from the database
-$query = "SELECT first_name, last_name, email, password FROM users WHERE user_id = ?";
+// Fetch the current hashed password from the database
+$query = "SELECT password FROM users WHERE user_id = ?";
 $stmt = mysqli_prepare($link, $query);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
-mysqli_stmt_bind_result($stmt, $first_name, $last_name, $email, $hashed_password);
+mysqli_stmt_bind_result($stmt, $hashed_password);
 mysqli_stmt_fetch($stmt);
 mysqli_stmt_close($stmt);
 
@@ -26,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Check if the current password is correct
+    // Validate the inputs
     if (!password_verify($current_password, $hashed_password)) {
         $error_message = "The current password is incorrect.";
     } elseif ($new_password !== $confirm_password) {
@@ -43,38 +45,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result) {
             $success_message = "Password successfully updated.";
+            mysqli_stmt_close($stmt);
+            mysqli_close($link);
+            header("Location: ../index.php?page=update_profile?success=" . urlencode($success_message));
+            exit();
         } else {
             $error_message = "An error occurred while updating the password.";
         }
 
         mysqli_stmt_close($stmt);
     }
+
+    mysqli_close($link);
+
+    // Redirect back to the update form with the error message
+    if (isset($error_message)) {
+        header("Location: ../index.php?page=update_profile?error=" . urlencode($error_message));
+        exit();
+    }
+} else {
+    // If the form is not submitted properly, redirect to the update form
+    header("Location: ../index.php?page=update_profile");
+    exit();
 }
-
-mysqli_close($link);
-?>
-    <h1>Update Your Password</h1>
-
-    <?php if (isset($error_message)): ?>
-        <p style="color: red;"><?php echo htmlspecialchars($error_message); ?></p>
-    <?php endif; ?>
-
-    <?php if (isset($success_message)): ?>
-        <p style="color: green;"><?php echo htmlspecialchars($success_message); ?></p>
-    <?php endif; ?>
-
-    <form action="content/update_profile_process.php" method="POST">
-        <label for="current_password">Current Password:</label>
-        <input type="password" id="current_password" name="current_password" required><br>
-
-        <label for="new_password">New Password:</label>
-        <input type="password" id="new_password" name="new_password" required><br>
-
-        <label for="confirm_password">Confirm New Password:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required><br><br>
-
-        <button type="submit">Update Password</button>
-    </form>
-
-    <br><br>
-    <a href="index.php?page=etusivu">Back to Profile</a>
