@@ -1,10 +1,5 @@
 <?php
-<<<<<<< HEAD
 
-require_once('config.php');
-
-=======
->>>>>>> 372890da99e5e460fc0477906214c3cdf9401b71
 // Check if the user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
     header("Location: index.php?page=login"); 
@@ -46,7 +41,7 @@ mysqli_close($link);
         <button type="submit">Update Password</button>
     </form>
 
-    <form action="index.php?page=logout" method="post">
+    <form action="content/logout.php" method="post">
         <button type="submit">Logout</button>
     </form>
 </body>

@@ -2,7 +2,7 @@
 require_once('../config/config.php');
 session_start();
 $pages = array(
-    "etusivu", "cart", "checkout", "profile", "login", "logout", "product", "register",
+    "etusivu", "cart", "checkout", "profile", "login", "product", "register",
     "login_process", "register_process", "update_profile",
     "admin_profile", "add_product"
 );
