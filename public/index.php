@@ -1,10 +1,23 @@
 <?php
-$pages = array("etusivu", "cart", "checkout", "profile", "login", "logout", "product", "register", "login_process", "register_process", "update_profile");
+require_once('../config/config.php');
+session_start();
+$pages = array(
+    "etusivu", "cart", "checkout", "profile", "login", "logout", "product", "register",
+    "login_process", "register_process", "update_profile",
+    "admin_profile", "add_product"
+);
 $page = "etusivu";
 
 if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
     $page = $_GET['page'];
+    $restrictedPages = ["cart", "checkout", "profile", "update_profile"];
+    if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
+        header("Location: index.php?page=login");
+        exit(); // Stop further execution
+    }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fi">
@@ -26,7 +39,7 @@ if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
 
     <div class="content">
         <?php
-        $contentFile = "content/" . $page . ".php";
+        $contentFile = "content/"  . $page . ".php";
         if (file_exists($contentFile)) {
             include($contentFile);
         } else {

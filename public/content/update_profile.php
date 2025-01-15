@@ -1,20 +1,17 @@
 <?php
 session_start();
-require_once('config.php');
+require_once('../../config/config.php');
 
 // Check if the user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
-    header("Location: login.php");
+    header("Location: index.php?page=login");
     exit();
 }
 
 $user_id = $_SESSION['SESS_USER_ID'];
 
 // Connect to the database
-$link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_DATABASE);
-if (!$link) {
-    die('Failed to connect to server: ' . mysqli_connect_error());
-}
+$link = getDbConnection();
 
 // Fetch user details from the database
 $query = "SELECT first_name, last_name, email, password FROM users WHERE user_id = ?";
@@ -70,11 +67,11 @@ mysqli_close($link);
     <h1>Update Your Password</h1>
 
     <?php if (isset($error_message)): ?>
-        <p style="color: red;"><?php echo $error_message; ?></p>
+        <p style="color: red;"><?php echo htmlspecialchars($error_message); ?></p>
     <?php endif; ?>
 
     <?php if (isset($success_message)): ?>
-        <p style="color: green;"><?php echo $success_message; ?></p>
+        <p style="color: green;"><?php echo htmlspecialchars($success_message); ?></p>
     <?php endif; ?>
 
     <form action="update_profile.php" method="POST">
@@ -91,6 +88,6 @@ mysqli_close($link);
     </form>
 
     <br><br>
-    <a href="profile.php">Back to Profile</a>
+    <a href="index.php?page=etusivu">Back to Profile</a>
 </body>
 </html>

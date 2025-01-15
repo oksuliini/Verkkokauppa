@@ -15,6 +15,6 @@ http_response_code(404);
 <body>
     <h1>404 - Sivua ei löytynyt</h1>
     <p>Etsimääsi sivua ei ole olemassa.</p>
-    <a href="/public/index.php">Palaa etusivulle</a>
+    <a href="../public/index.php">Palaa etusivulle</a>
 </body>
 </html>

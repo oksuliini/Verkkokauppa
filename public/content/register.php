@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 
 ?>
 <!DOCTYPE html>
@@ -19,6 +20,16 @@
 		echo '</ul>';
 		unset($_SESSION['ERRMSG_ARR']);
 	}
+=======
+    if( isset($_SESSION['ERRMSG_ARR']) && is_array($_SESSION['ERRMSG_ARR']) && count($_SESSION['ERRMSG_ARR']) >0 ) {
+        echo '<ul class="err">';
+        foreach($_SESSION['ERRMSG_ARR'] as $msg) {
+            echo '<li>',$msg,'</li>'; 
+        }
+        echo '</ul>';
+        unset($_SESSION['ERRMSG_ARR']);
+    }
+>>>>>>> 372890da99e5e460fc0477906214c3cdf9401b71
 ?>
 <h1>Register new user</h1>
 <form id="register-form" name="registerform" method="post" action="index.php?page=register_process">
@@ -63,9 +74,7 @@
       <td>
       <b>Already a user?</b>
         <td>
-        <a href='login.php' >Click here!</a>
+        <a href='index.php?page=login' >Click here!</a>
     </tr>
   </table>
 </form>
-</body>
-</html>
