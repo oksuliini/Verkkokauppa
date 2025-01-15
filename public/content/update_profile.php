@@ -12,58 +12,27 @@ $user_id = $_SESSION['SESS_USER_ID'];
 $link = getDbConnection();
 
 // Fetch user details from the database
-$query = "SELECT first_name, last_name, email, password FROM users WHERE user_id = ?";
+$query = "SELECT first_name, last_name, email FROM users WHERE user_id = ?";
 $stmt = mysqli_prepare($link, $query);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
-mysqli_stmt_bind_result($stmt, $first_name, $last_name, $email, $hashed_password);
+mysqli_stmt_bind_result($stmt, $first_name, $last_name, $email);
 mysqli_stmt_fetch($stmt);
 mysqli_stmt_close($stmt);
-
-// If the form is submitted, process the password update
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
-
-    // Check if the current password is correct
-    if (!password_verify($current_password, $hashed_password)) {
-        $error_message = "The current password is incorrect.";
-    } elseif ($new_password !== $confirm_password) {
-        $error_message = "The new passwords do not match.";
-    } else {
-        // Hash the new password
-        $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-
-        // Update the password in the database
-        $update_query = "UPDATE users SET password = ? WHERE user_id = ?";
-        $stmt = mysqli_prepare($link, $update_query);
-        mysqli_stmt_bind_param($stmt, "si", $new_hashed_password, $user_id);
-        $result = mysqli_stmt_execute($stmt);
-
-        if ($result) {
-            $success_message = "Password successfully updated.";
-        } else {
-            $error_message = "An error occurred while updating the password.";
-        }
-
-        mysqli_stmt_close($stmt);
-    }
-}
 
 mysqli_close($link);
 ?>
     <h1>Update Your Password</h1>
 
-    <?php if (isset($error_message)): ?>
-        <p style="color: red;"><?php echo htmlspecialchars($error_message); ?></p>
+    <?php if (isset($_GET['error'])): ?>
+        <p style="color: red;"><?php echo htmlspecialchars($_GET['error']); ?></p>
     <?php endif; ?>
 
-    <?php if (isset($success_message)): ?>
-        <p style="color: green;"><?php echo htmlspecialchars($success_message); ?></p>
+    <?php if (isset($_GET['success'])): ?>
+        <p style="color: green;"><?php echo htmlspecialchars($_GET['success']); ?></p>
     <?php endif; ?>
 
-    <form action="content/update_profile_process.php" method="POST">
+    <form action="update_profile_process.php" method="POST">
         <label for="current_password">Current Password:</label>
         <input type="password" id="current_password" name="current_password" required><br>
 

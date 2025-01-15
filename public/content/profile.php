@@ -1,5 +1,4 @@
 <?php
-
 // Check if the user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
     header("Location: index.php?page=login"); 

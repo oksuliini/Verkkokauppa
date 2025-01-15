@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $success_message = "Password successfully updated.";
             mysqli_stmt_close($stmt);
             mysqli_close($link);
-            header("Location: ../index.php?page=update_profile?success=" . urlencode($success_message));
+            header("Location: update_profile.php?success=" . urlencode($success_message));
             exit();
         } else {
             $error_message = "An error occurred while updating the password.";
@@ -60,11 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Redirect back to the update form with the error message
     if (isset($error_message)) {
-        header("Location: ../index.php?page=update_profile?error=" . urlencode($error_message));
+        header("Location: update_profile.php?error=" . urlencode($error_message));
         exit();
     }
 } else {
     // If the form is not submitted properly, redirect to the update form
-    header("Location: ../index.php?page=update_profile");
+    header("Location: update_profile.php");
     exit();
 }

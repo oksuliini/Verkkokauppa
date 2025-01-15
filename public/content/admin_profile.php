@@ -1,6 +1,6 @@
 <?php
 if ($_SESSION['SESS_ROLE'] !== 'admin') {
-    header("Location: errors/403.php");
+    header("Location: ../errors/403.php");
     exit();
 }
 $link = getDbConnection();
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Update Password</button>
     </form>
 
-    <form action="index.php?page=logout" method="post">
+    <form action="content/logout.php" method="post">
         <button type="submit">Logout</button>
     </form>
     <h2><a href="index.php?page=add_product">Add Products</a><h2>
