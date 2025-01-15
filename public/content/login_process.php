@@ -3,8 +3,6 @@ session_start();
 require_once('../../config/config.php');
 // Array to store validation errors
 $errmsg_arr = array();
-
-// Validation error flag
 $errflag = false;
 
 // Connect to MySQL server
@@ -12,13 +10,13 @@ $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_DATABASE);
 if (!$link) {
     die('Failed to connect to server: ' . mysqli_connect_error());
 }
+
 // Function to sanitize values received from the form
 function clean($link, $str) {
-    $str = stripslashes($str);
-    return mysqli_real_escape_string($link, $str);
+    return mysqli_real_escape_string($link, stripslashes($str));
 }
 
-// Sanitize the POST values
+// Sanitize POST values
 $username = isset($_POST['username']) ? clean($link, $_POST['username']) : '';
 $password = isset($_POST['password']) ? clean($link, $_POST['password']) : '';
 
@@ -32,8 +30,7 @@ if ($password == '') {
     $errflag = true;
 }
 
-
-// If there are input validations, redirect back to the registration form
+// If there are input validations, redirect back to the login page
 if ($errflag) {
     $_SESSION['ERRMSG_ARR'] = $errmsg_arr;
     session_write_close();
@@ -46,6 +43,7 @@ $result = mysqli_query($link, $qry);
 
 if ($result && mysqli_num_rows($result) == 1) {
     $user = mysqli_fetch_assoc($result);
+
     // Use password_verify() to check the password
     if (password_verify($password, $user['password'])) {
         // Login success
@@ -54,17 +52,14 @@ if ($result && mysqli_num_rows($result) == 1) {
         $_SESSION['SESS_FIRST_NAME'] = $user['first_name'];
         $_SESSION['SESS_LAST_NAME'] = $user['last_name'];
         $_SESSION['SESS_EMAIL'] = $user['email'];
+        $_SESSION['SESS_ROLE'] = $user['role'];
+
+        // Redirect based on role
         if ($user['role'] === 'admin') {
-            $_SESSION['SESS_ROLE'] = 'admin';
             header("Location: ../index.php?page=admin_profile");
-            exit();
         } else {
-            $_SESSION['SESS_ROLE'] = 'user';
             header("Location: ../index.php?page=profile");
-            exit();
         }
-        session_write_close();
-        header("location: ../index.php?page=etusivu");
         exit();
     } else {
         // Incorrect password
@@ -74,7 +69,7 @@ if ($result && mysqli_num_rows($result) == 1) {
     }
 } else {
     // No such username found
-    $_SESSION['ERRMSG_ARR'] = ['Invalid username '];
+    $_SESSION['ERRMSG_ARR'] = ['Invalid username'];
     header("location: ../index.php?page=login");
     exit();
 }

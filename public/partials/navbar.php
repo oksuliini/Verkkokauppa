@@ -1,3 +1,16 @@
+<?php
+$profileLink = "index.php?page=login"; // Default to login if not logged in
+
+if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
+    if (isset($_SESSION['SESS_ROLE'])) {
+        if ($_SESSION['SESS_ROLE'] === 'admin') {
+            $profileLink = "index.php?page=admin_profile"; // Admin profile page
+        } elseif ($_SESSION['SESS_ROLE'] === 'customer') {
+            $profileLink = "index.php?page=profile"; // Customer profile page
+        }
+    }
+}
+?>
 <nav class="navbar navbar-expand-lg" style="background-color: #ffccd5; font-family: 'Comic Sans MS', cursive;">
   <div class="container-fluid d-flex justify-content-between align-items-center">
     <!-- Left Side -->
@@ -11,6 +24,11 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link text-white" href="index.php?page=etusivu">Hello Kitty Verkkokauppa</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="index.php?page=product">Products</a>
         </li>
       </ul>
     </div>
@@ -55,7 +73,7 @@
 
         <!-- Profile Icon -->
         <li class="nav-item">
-          <a href="index.php?page=profile" class="btn btn-white" aria-label="User Profile">
+          <a href="<?php echo htmlspecialchars($profileLink); ?>" class="btn btn-white" aria-label="User Profile">
             <i class="fas fa-user-circle" style="font-size: 1.5rem; color: #ff6f91;"></i>
           </a>
         </li>
