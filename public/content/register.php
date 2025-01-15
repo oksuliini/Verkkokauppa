@@ -1,5 +1,5 @@
 <?php
-	session_start();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +21,7 @@
 	}
 ?>
 <h1>Register new user</h1>
-<form id="register-form" name="registerform" method="post" action="register_process.php">
+<form id="register-form" name="registerform" method="post" action="index.php?page=register_process">
   <table width="300" border="0" align="center" cellpadding="2" cellspacing="0">
     <tr>
       <th>First Name </th>
