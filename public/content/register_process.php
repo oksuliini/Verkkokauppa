@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../../config.php');
+require_once('../../config/config.php');
 $errmsg_arr = array();
 
 // Validation error flag
@@ -70,7 +70,7 @@ $result = mysqli_query($link, $qry);
 
 // Check whether the query was successful or not
 if ($result) {
-    header("location: ../index.php?page=login.php"); // Redirect to success page
+    header("location: ../index.php?page=login"); // Redirect to success page
     exit();
 } else {
     die("Query failed" . mysqli_error($link));
