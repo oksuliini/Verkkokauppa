@@ -36,9 +36,7 @@ mysqli_close($link);
 
     <h2>Change Your Password</h2>
     <p>If you want to change your password, click the button below:</p>
-    <form action="index.php?page=update_profile" method="get">
-        <button type="submit">Update Password</button>
-    </form>
+    <a href="index.php?page=update_profile">Update Profile</a>
 
     <form action="content/logout.php" method="post">
         <button type="submit">Logout</button>

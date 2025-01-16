@@ -24,15 +24,21 @@ mysqli_close($link);
 ?>
     <h1>Update Your Password</h1>
 
-    <?php if (isset($_GET['error'])): ?>
-        <p style="color: red;"><?php echo htmlspecialchars($_GET['error']); ?></p>
-    <?php endif; ?>
+    <?php
+// Display success or error messages
+if (isset($_SESSION['SUCCESS_MESSAGE'])) {
+    echo "<p style='color: green;'>" . htmlspecialchars($_SESSION['SUCCESS_MESSAGE']) . "</p>";
+    unset($_SESSION['SUCCESS_MESSAGE']); // Clear the message after displaying it
+}
 
-    <?php if (isset($_GET['success'])): ?>
-        <p style="color: green;"><?php echo htmlspecialchars($_GET['success']); ?></p>
-    <?php endif; ?>
+if (isset($_SESSION['ERROR_MESSAGE'])) {
+    echo "<p style='color: red;'>" . htmlspecialchars($_SESSION['ERROR_MESSAGE']) . "</p>";
+    unset($_SESSION['ERROR_MESSAGE']); // Clear the message after displaying it
+}
+?>
 
-    <form action="update_profile_process.php" method="POST">
+
+    <form action="content/update_profile_process.php" method="POST">
         <label for="current_password">Current Password:</label>
         <input type="password" id="current_password" name="current_password" required><br>
 
@@ -46,4 +52,4 @@ mysqli_close($link);
     </form>
 
     <br><br>
-    <a href="index.php?page=etusivu">Back to Profile</a>
+    <a href="index.php?page=profile">Back to Profile</a>

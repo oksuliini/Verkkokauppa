@@ -1,16 +1,15 @@
 <?php
-require_once('../config/config.php');
 session_start();
+require_once('../config/config.php');
 $pages = array(
-    "etusivu", "cart", "checkout", "profile", "login", "product", "register",
-    "update_profile",
+    "etusivu", "cart", "checkout", "profile", "login", "product", "register", "update_profile",
     "admin_profile", "add_product"
 );
 $page = "etusivu";
 
 if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
     $page = $_GET['page'];
-    $restrictedPages = ["cart", "checkout", "profile", "update_profile"];
+    $restrictedPages = ["cart", "checkout", "profile", "admin_profile", "orders", "add_product", "update_profile"];
     if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
         header("Location: index.php?page=login");
         exit(); // Stop further execution
@@ -25,6 +24,7 @@ if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Kitty Verkkokauppa</title>
+    
 
    
     <!-- Bootstrap CSS -->

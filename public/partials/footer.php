@@ -11,13 +11,13 @@
 
         <!-- Social Media Icons -->
         <div class="social-icons position-absolute end-0">
-            <a href="https://www.facebook.com/hellokitty/" class="text-white me-3" aria-label="Facebook">
+            <a href="#" class="text-white me-3" aria-label="Facebook">
                 <i class="fab fa-facebook"></i> <!-- Poistettu "fa-sm" alkuperäisen koon palauttamiseksi -->
             </a>
-            <a href="https://www.instagram.com/hellokitty/" class="text-white me-3" aria-label="Instagram">
+            <a href="#" class="text-white me-3" aria-label="Instagram">
                 <i class="fab fa-instagram"></i> <!-- Poistettu "fa-sm" alkuperäisen koon palauttamiseksi -->
             </a>
-            <a href="https://x.com/hellokitty?lang=fi&mx=2" class="text-white" aria-label="Twitter">
+            <a href="#" class="text-white" aria-label="Twitter">
                 <i class="fab fa-twitter"></i> <!-- Poistettu "fa-sm" alkuperäisen koon palauttamiseksi -->
             </a>
         </div>

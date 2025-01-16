@@ -26,11 +26,6 @@ if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
           <a class="nav-link text-white" href="index.php?page=etusivu">Hello Kitty Verkkokauppa</a>
         </li>
       </ul>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link text-white" href="index.php?page=product">Products</a>
-        </li>
-      </ul>
     </div>
 
     <!-- Search Bar and Categories in the Center -->
