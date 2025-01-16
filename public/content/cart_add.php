@@ -35,16 +35,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Ohjaa takaisin tuotesivulle onnistuneen lisäyksen jälkeen
-        header("Location: ../index.php?page=product&success=Product added to cart!");
+        header("Location: ../index.php?page=etusivu&success=Product added to cart!");
         exit();
     } else {
         // Virheilmoitus puuttuvista tiedoista
-        header("Location: ../index.php?page=product&error=Missing product data.");
+        header("Location: ../index.php?page=etusivu&error=Missing product data.");
         exit();
     }
 } else {
     // Ohjaa takaisin, jos yritetään suoraa pääsyä ilman lomakkeen lähetystä
-    header("Location: ../index.php?page=product");
+    header("Location: ../index.php?page=etusivu");
     exit();
 }
 ?>

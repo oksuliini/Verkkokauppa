@@ -2,15 +2,12 @@
 session_start();
 require_once('../../config/config.php');
 
-// Check if the user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
-    header("Location: index.php?page=login");
+    header("Location: ../index.php?page=login");
     exit();
 }
 
 $user_id = $_SESSION['SESS_USER_ID'];
-
-// Connect to the database
 $link = getDbConnection();
 
 // Fetch the current hashed password from the database
@@ -30,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate the inputs
     if (!password_verify($current_password, $hashed_password)) {
-        $error_message = "The current password is incorrect.";
+        $_SESSION['ERROR_MESSAGE'] = "The current password is incorrect.";
     } elseif ($new_password !== $confirm_password) {
-        $error_message = "The new passwords do not match.";
+        $_SESSION['ERROR_MESSAGE'] = "The new passwords do not match.";
     } else {
         // Hash the new password
         $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
@@ -44,13 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = mysqli_stmt_execute($stmt);
 
         if ($result) {
-            $success_message = "Password successfully updated.";
-            mysqli_stmt_close($stmt);
-            mysqli_close($link);
-            header("Location: update_profile.php?success=" . urlencode($success_message));
-            exit();
+            $_SESSION['SUCCESS_MESSAGE'] = "Password successfully updated.";
         } else {
-            $error_message = "An error occurred while updating the password.";
+            $_SESSION['ERROR_MESSAGE'] = "An error occurred while updating the password.";
         }
 
         mysqli_stmt_close($stmt);
@@ -58,13 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     mysqli_close($link);
 
-    // Redirect back to the update form with the error message
-    if (isset($error_message)) {
-        header("Location: update_profile.php?error=" . urlencode($error_message));
-        exit();
-    }
+    // Redirect back to the update_profile page without including messages in the URL
+    header("Location: ../index.php?page=update_profile");
+    exit();
 } else {
     // If the form is not submitted properly, redirect to the update form
-    header("Location: update_profile.php");
+    header("Location: ../index.php?page=update_profile");
     exit();
 }

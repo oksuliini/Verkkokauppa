@@ -27,6 +27,7 @@ $address = isset($_POST['address']) ? clean($link, $_POST['address']) : '';
 $username = isset($_POST['username']) ? clean($link, $_POST['username']) : '';
 $password = isset($_POST['password']) ? clean($link, $_POST['password']) : '';
 $cpassword = isset($_POST['cpassword']) ? clean($link, $_POST['cpassword']) : '';
+$role = isset($_POST['role']) && in_array($_POST['role'], ['customer', 'admin']) ? $_POST['customer'] : 'customer';
 
 if ($first_name == '') $errmsg_arr[] = 'First name missing';
 if ($last_name == '') $errmsg_arr[] = 'Last name missing';
@@ -64,8 +65,9 @@ if ($errflag) {
 // Hash the password securely
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
+
 // Create INSERT query
-$qry = "INSERT INTO users (first_name, last_name, email, phone, address, username, password) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$username', '$hashed_password')";
+$qry = "INSERT INTO users (first_name, last_name, email, phone, address, username, password, role) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$username', '$hashed_password', '$role')";
 $result = mysqli_query($link, $qry);
 
 // Check whether the query was successful or not
