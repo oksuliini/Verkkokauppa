@@ -32,6 +32,14 @@ if (!$result) {
                 <p class='product-description'>$description</p>
                 <p class='product-price'>Price: $$price</p>
                 <p class='product-stock'>Stock: $stock_quantity</p>
+                <form action='content/cart_add.php' method='post'>
+                    <input type='hidden' name='product_id' value='$productId'>
+                    <input type='hidden' name='name' value='$name'>
+                    <input type='hidden' name='price' value='{$row['price']}'>
+                    <label for='quantity_$productId'>Quantity:</label>
+                    <input type='number' id='quantity_$productId' name='quantity' value='1' min='1' max='$stock_quantity' class='form-control d-inline' style='width: 70px;'>
+                    <button type='submit' class='btn btn-primary mt-2'>Add to Cart</button>
+                </form>
             </div>";
         }
     } else {

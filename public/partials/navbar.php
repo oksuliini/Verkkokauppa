@@ -66,7 +66,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
       <ul class="navbar-nav">
         <!-- Cart Icon -->
         <li class="nav-item">
-          <a class="nav-link text-white" href="#" aria-label="Shopping Cart">
+          <a class="nav-link text-white" href="index.php?page=cart" aria-label="Shopping Cart">
             <i class="fas fa-shopping-cart"></i>
           </a>
         </li>
