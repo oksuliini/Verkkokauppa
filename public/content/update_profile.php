@@ -48,8 +48,29 @@ if (isset($_SESSION['ERROR_MESSAGE'])) {
         <label for="confirm_password">Confirm New Password:</label>
         <input type="password" id="confirm_password" name="confirm_password" required><br><br>
 
-        <button type="submit">Update Password</button>
+        <form action="index.php?page=update_profile" method="post">
+        <button type="submit" class="btn btn-hotpink mt-2">Update Profile</button>
     </form>
+    </form>
+    <form action="content/logout.php" method="post">
+        <button type="submit" class="btn btn-hotpink mt-2">Logout</button>
+    </form>
+    <style>
+.btn-hotpink {
+    background-color: hotpink;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
 
-    <br><br>
-    <a href="index.php?page=profile">Back to Profile</a>
+.btn-hotpink:hover {
+    background-color: #ff69b4;
+    transform: scale(1.1);
+    color: white;
+}
+
+.btn-hotpink:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+    outline: none;
+}
+</style>

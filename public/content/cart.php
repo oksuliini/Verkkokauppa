@@ -27,7 +27,7 @@
                                 <form action="content/cart_update.php" method="post" class="d-inline">
                                     <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
                                     <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1" class="form-control d-inline" style="width: 70px;">
-                                    <button type="submit" class="btn btn-primary btn-sm">Päivitä</button>
+                                    <button type="submit" class="btn btn-hotpink mt-2">Päivitä</button>
                                 </form>
                             </td>
                             <td><?php echo number_format($itemTotal, 2); ?> €</td>
@@ -50,10 +50,29 @@
         </div>
 
         <div class="text-end">
-            <a href="index.php?page=checkout" class="btn btn-success">Jatka kassalle</a>
+            <a href="index.php?page=checkout" class="btn btn-hotpink mt-2">Jatka kassalle</a>
         </div>
     <?php else: ?>
         <p>Ostoskorisi on tyhjä.</p>
-        <a href="index.php?page=etusivu" class="btn btn-primary">Jatka ostoksia</a>
+        <a href="index.php?page=etusivu" class="btn btn-hotpink mt-2">Jatka ostoksia</a>
     <?php endif; ?>
 </div>
+<style>
+.btn-hotpink {
+    background-color: hotpink;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-hotpink:hover {
+    background-color: #ff69b4;
+    transform: scale(1.1);
+    color: white;
+}
+
+.btn-hotpink:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+    outline: none;
+}
+</style>

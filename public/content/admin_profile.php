@@ -49,14 +49,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2>Change Your Password</h2>
     <p>If you want to change your password, click the button below:</p>
     <form action="index.php?page=update_profile" method="get">
-        <button type="submit">Update Password</button>
+        <button type="submit" class="btn btn-hotpink mt-2">Update Password</button>
     </form>
 
     <form action="content/logout.php" method="post">
-        <button type="submit">Logout</button>
+        <button type="submit" class="btn btn-secondary mt-2">Logout</button>
     </form>
-    <h2><a href="index.php?page=add_product">Add Products</a><h2>
+    <form action="index.php?page=add_product" method="post">
+        <button type="submit" class="btn btn-hotpink mt-2">Add Produts</button>
+    </form>
 
     <?php if (isset($product_message)) echo "<p>$product_message</p>"; ?>
+    <style>
+    .btn-hotpink {
+background-color: hotpink;
+color: white;
+border: none;
+transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-hotpink:hover {
+    background-color: #ff69b4;
+    transform: scale(1.1);
+    color: white;
+}
+
+.btn-hotpink:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+    outline: none;
+}
+    </style>
 </body>
 </html>

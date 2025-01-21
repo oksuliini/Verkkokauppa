@@ -32,13 +32,12 @@ if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Kitty Verkkokauppa</title>
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="styles.css">
+<!-- Custom Styles -->
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -66,5 +65,15 @@ if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Font Awesome JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <script>
+function showAddToCartAlert(productName, quantity) {
+    if (quantity > 0) {
+        alert(`${quantity} x ${productName} added to your cart!`);
+    } else {
+        alert("Please select a valid quantity.");
+    }
+    return true; // Allow form submission to proceed
+}
+</script>
 </body>
 </html>

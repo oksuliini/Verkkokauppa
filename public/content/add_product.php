@@ -30,7 +30,28 @@ if (!isset($_SESSION['SESS_ROLE']) || $_SESSION['SESS_ROLE'] !== 'admin') {
         <label for="image">Product Image:</label>
         <input type="file" id="image" name="image" accept="image/*" required><br>
 
-        <button type="submit">Add Product</button>
+        <button type="submit" class="btn btn-hotpink mt-2">Add Product</button>
     </form>
 
-    <a href="index.php?page=admin_profile.php">Back to Admin Profile</a>
+    <form action="index.php?page=admin_profile" method="post">
+        <button type="submit" class="btn btn-secondary mt-2">Back to Admin Profile</button>
+    </form>
+    <style>
+    .btn-hotpink {
+background-color: hotpink;
+color: white;
+border: none;
+transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-hotpink:hover {
+    background-color: #ff69b4;
+    transform: scale(1.1);
+    color: white;
+}
+
+.btn-hotpink:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+    outline: none;
+}
+    </style>

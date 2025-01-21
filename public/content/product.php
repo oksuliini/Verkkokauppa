@@ -1,55 +1,48 @@
 <?php
-// Assuming the database connection is already set
-$productId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
-if ($productId <= 0) {
-    echo "Invalid product ID.";
-    exit;
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    echo "<p>Product not found.</p>";
+    exit();
 }
 
-// Fetch product details from the database
-$query = "SELECT * FROM products WHERE product_id = $productId";
-$result = mysqli_query($link, $query);
+$productId = intval($_GET['id']);
+$link = getDbConnection();
+$query = "SELECT * FROM products WHERE product_id = ?";
+$stmt = mysqli_prepare($link, $query);
+mysqli_stmt_bind_param($stmt, "i", $productId);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
-if (!$result) {
-    die("Error fetching product details: " . mysqli_error($link));
-}
+if ($row = mysqli_fetch_assoc($result)) {
+    $name = htmlspecialchars($row['name']);
+    $description = htmlspecialchars($row['description']);
+    $price = number_format($row['price'], 2);
+    $stock_quantity = $row['stock_quantity'];
+    $imageUrl = file_exists($row['image_url']) ? $row['image_url'] : "images/placeholder.png";
 
-$product = mysqli_fetch_assoc($result);
+    echo "
+    <div class='product-details-page'>
+        <img src='$imageUrl' alt='$name' class='product-image img-fluid' style='height: 300px; object-fit: cover;'>
+        <h1>$name</h1>
+        <p>$description</p>
+        <p>Price: $$price</p>
+        <p>Stock: $stock_quantity</p>
 
-if (!$product) {
-    die("Product not found.");
-}
-
-// Extract product details
-$productName = htmlspecialchars($product['name']);
-$productDescription = htmlspecialchars($product['description']);
-$productPrice = number_format($product['price'], 2);
-$productStock = $product['stock_quantity'];
-$productImage = $product['image_url'];
-if (!file_exists($productImage)) {
-    $productImage = "images/placeholder.png"; // Use placeholder image if the product image is missing
-}
-?>
-
-<h1><?php echo $productName; ?></h1>
-<div class="product-details-container">
-    <img src="<?php echo $productImage; ?>" alt="<?php echo $productName; ?>" class="product-image-large">
-    <div class="product-info">
-        <p class="product-description"><?php echo $productDescription; ?></p>
-        <p class="product-price">Price: €<?php echo $productPrice; ?></p>
-        <p class="product-stock">Stock: <?php echo $productStock; ?></p>
-
-        <form action="content/cart_add.php" method="post">
-            <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
-            <input type="hidden" name="name" value="<?php echo $productName; ?>">
-            <input type="hidden" name="price" value="<?php echo $product['price']; ?>">
-            <label for="quantity">Quantity:</label>
-            <input type="number" id="quantity" name="quantity" value="1" min="1" max="<?php echo $productStock; ?>" class="form-control d-inline" style="width: 70px;">
-            <button type="submit" class="btn btn-primary mt-2">Add to Cart</button>
+        <!-- Add to Cart Form -->
+        <form action='content/cart_add.php' method='post' onsubmit='return showAddToCartAlert(\"$name\", this.quantity.value)'>
+            <input type='hidden' name='product_id' value='$productId'>
+            <input type='hidden' name='name' value='$name'>
+            <input type='hidden' name='price' value='{$row['price']}'>
+            <label for='quantity_$productId'>Quantity:</label>
+            <input type='number' id='quantity_$productId' name='quantity' value='1' min='1' max='$stock_quantity' class='form-control d-inline' style='width: 70px;'>
+            <button type='submit' class='btn btn-hotpink mt-2'>Add to Cart</button>
         </form>
-    </div>
-</div>
+    </div>";
+} else {
+    echo "<p>Product not found.</p>";
+}
+mysqli_stmt_close($stmt);
+mysqli_close($link);
+?>
 
 <style>
 .product-details-container {
@@ -86,5 +79,22 @@ if (!file_exists($productImage)) {
 .product-price, .product-stock {
     font-size: 1.1em;
     margin-bottom: 10px;
+}
+.btn-hotpink {
+    background-color: hotpink;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-hotpink:hover {
+    background-color: #ff69b4;
+    transform: scale(1.1);
+    color: white;
+}
+
+.btn-hotpink:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+    outline: none;
 }
 </style>
