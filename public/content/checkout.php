@@ -14,14 +14,7 @@ foreach ($_SESSION['cart'] as $productId => $item) {
 }
 
 ?>
-
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kassa</title>
-    
+   
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Kassa</h1>
@@ -86,14 +79,29 @@ foreach ($_SESSION['cart'] as $productId => $item) {
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-success">Viimeistele tilaus</button>
+            <button type="submit" class="btn btn-hotpink mt-2">Viimeistele tilaus</button>
         </form>
 
         <div class="mt-3">
             <a href="index.php?page=cart" class="btn btn-secondary">Palaa ostoskoriin</a>
         </div>
     </div>
+    <style>
+.btn-hotpink {
+    background-color: hotpink;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
 
-    
-</body>
-</html>
+.btn-hotpink:hover {
+    background-color: #ff69b4;
+    transform: scale(1.1);
+    color: white;
+}
+
+.btn-hotpink:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+    outline: none;
+}
+</style>

@@ -36,10 +36,31 @@ mysqli_close($link);
 
     <h2>Change Your Password</h2>
     <p>If you want to change your password, click the button below:</p>
-    <a href="index.php?page=update_profile">Update Profile</a>
-
-    <form action="content/logout.php" method="post">
-        <button type="submit">Logout</button>
+    <form action="index.php?page=update_profile" method="post">
+        <button type="submit" class="btn btn-hotpink mt-2">Update Profile</button>
     </form>
+<br>
+    <form action="content/logout.php" method="post">
+        <button type="submit" class="btn btn-secondary">Logout</button>
+    </form>
+    <style>
+.btn-hotpink {
+    background-color: hotpink;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-hotpink:hover {
+    background-color: #ff69b4;
+    transform: scale(1.1);
+    color: white;
+}
+
+.btn-hotpink:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+    outline: none;
+}
+</style>
 </body>
 </html>
