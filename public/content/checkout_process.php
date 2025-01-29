@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $link = getDbConnection();
 
     // Hae lomakkeelta tiedot
-    $userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : null; // Käyttäjän ID, jos kirjautunut
+    $userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']): // Käyttäjän ID, jos kirjautunut
     $deliveryMethod = mysqli_real_escape_string($link, $_POST['delivery_method']);
     $name = mysqli_real_escape_string($link, $_POST['name']);
     $address = mysqli_real_escape_string($link, $_POST['address']);
