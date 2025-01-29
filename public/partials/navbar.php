@@ -1,4 +1,16 @@
+<?php
+$profileLink = "index.php?page=login"; // Default to login if not logged in
 
+if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
+    if (isset($_SESSION['SESS_ROLE'])) {
+        if ($_SESSION['SESS_ROLE'] === 'admin') {
+            $profileLink = "index.php?page=admin_profile"; // Admin profile page
+        } elseif ($_SESSION['SESS_ROLE'] === 'customer') {
+            $profileLink = "index.php?page=profile"; // Customer profile page
+        }
+    }
+}
+?>
 <nav class="navbar navbar-expand-lg" style="background-color: #ffccd5; font-family: 'Comic Sans MS', cursive;">
   <div class="container-fluid d-flex justify-content-between align-items-center">
     <!-- Left Side -->
@@ -17,6 +29,7 @@
     </div>
 
     <!-- Search Bar and Categories in the Center -->
+     
     <div class="d-flex align-items-center" style="flex-grow: 1; justify-content: center;">
        <!-- Categories -->
        <ul class="navbar-nav ms-2">
@@ -25,22 +38,10 @@
             Categories
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <?php
-            // Database connection
-            $link = getDbConnection();
-            $categoryQuery = "SELECT * FROM categories";
-            $categoryResult = mysqli_query($link, $categoryQuery);
-
-            if ($categoryResult && mysqli_num_rows($categoryResult) > 0) {
-                while ($category = mysqli_fetch_assoc($categoryResult)) {
-                    $categoryId = $category['category_id'];
-                    $categoryName = htmlspecialchars($category['name']);
-                    echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category_id=$categoryId'>$categoryName</a></li>";
-                }
-            } else {
-                echo "<li><a class='dropdown-item' href='#'>No categories available</a></li>";
-            }
-            ?>
+            <li><a class="dropdown-item" href="#">Plush Toys</a></li>
+            <li><a class="dropdown-item" href="#">Accessories</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Special Edition</a></li>
           </ul>
         </li>
       </ul>
@@ -51,6 +52,8 @@
           <i class="fas fa-search"></i>
         </button>
       </form>
+
+     
     </div>
 
     <!-- Cart and Profile Icons on the Right -->

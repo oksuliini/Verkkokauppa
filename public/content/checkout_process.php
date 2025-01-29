@@ -1,6 +1,16 @@
 <?php
+
 session_start();
 require_once('../../config/config.php');
+
+// Tarkista, että käyttäjä on kirjautunut
+if (!isset($_SESSION['SESS_USER_ID'])) {
+    die("Virhe: Sinun täytyy olla kirjautunut tehdäksesi tilauksen.");
+}
+
+$userId = intval($_SESSION['SESS_USER_ID']);
+
+
 // Tarkista, että ostoskori ei ole tyhjä
 if (empty($_SESSION['cart'])) {
     header("Location: ../index.php?page=cart");
@@ -11,9 +21,15 @@ if (empty($_SESSION['cart'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $link = getDbConnection();
 
-    // Hae lomakkeelta tiedot
-    $userId = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']): // Käyttäjän ID, jos kirjautunut
-    $deliveryMethod = mysqli_real_escape_string($link, $_POST['delivery_method']);
+    // Hae lomaketiedot ja varmista, että kaikki on kunnossa
+    $deliveryMethod = isset($_POST['delivery_method']) ? mysqli_real_escape_string($link, $_POST['delivery_method']) : '';
+
+    // Tarkista, että toimitustapa on kelvollinen ENUM-arvo
+    $validDeliveryMethods = ['pickup', 'shipping'];
+    if (!in_array($deliveryMethod, $validDeliveryMethods)) {
+        die("Virhe: Virheellinen toimitustapa ($deliveryMethod)");
+    }
+
     $name = mysqli_real_escape_string($link, $_POST['name']);
     $address = mysqli_real_escape_string($link, $_POST['address']);
     $email = mysqli_real_escape_string($link, $_POST['email']);
@@ -28,10 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $total += $item['price'] * $item['quantity'];
         }
 
-        // Lisää tilaus tietokantaan
-        $orderQuery = "INSERT INTO orders (user_id, total_price, delivery_method, created_at) 
-        VALUES (" . ($userId === null ? 'NULL' : $userId) . ", $total, '$deliveryMethod', NOW())";
-
+        // Lisää tilaus tietokantaan ja liitä oikea user_id
+        $orderQuery = "INSERT INTO orders (`user_id`, `total_price`, `delivery_method`, `created_at`) 
+                       VALUES ($userId, $total, '$deliveryMethod', NOW())";
 
         if (!mysqli_query($link, $orderQuery)) {
             throw new Exception("Tilausta ei voitu tallentaa: " . mysqli_error($link));
@@ -46,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $price = $item['price'];
 
             // Lisää tilauksen tuotteet
-            $orderItemQuery = "INSERT INTO order_items (order_id, product_id, quantity, price) 
+            $orderItemQuery = "INSERT INTO order_items (`order_id`, `product_id`, `quantity`, `price`) 
                                VALUES ($orderId, $productId, $quantity, $price)";
             if (!mysqli_query($link, $orderItemQuery)) {
                 throw new Exception("Tuotteen lisääminen tilaukseen epäonnistui: " . mysqli_error($link));

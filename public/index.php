@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once('../config/config.php');  // Include database connection configuration
-
 // Define available pages
 $pages = array(
     "etusivu", "cart", "checkout", "profile", "login", "product", "register", "update_profile",
