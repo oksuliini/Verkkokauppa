@@ -12,43 +12,97 @@ $stmt->execute();
 $stmt->bind_result($first_name, $last_name, $email);
 $stmt->fetch();
 $stmt->close();
-// Process form to add a product
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    $description = $_POST['description'];
-    $price = floatval($_POST['price']);
-    $stock = intval($_POST['stock_quantity']);
 
-    $query = "INSERT INTO products (name, description, price, stock_quantity) VALUES ('$name', '$description', $price, $stock)";
-    if (mysqli_query($link, $query)) {
-        echo "<p>Product added successfully!</p>";
-    } else {
-        echo "<p>Error: " . mysqli_error($link) . "</p>";
-    }
+// Hae kaikki tilaukset
+$ordersQuery = "SELECT order_id, user_id, total_price, status, delivery_method, created_at FROM orders ORDER BY created_at DESC";
+$result = mysqli_query($link, $ordersQuery);
+$orders = [];
 
-    mysqli_close($link);
+while ($row = mysqli_fetch_assoc($result)) {
+    $orders[] = $row;
 }
+
+mysqli_close($link);
 ?>
 
-    <!-- Adminin profiilitiedot -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile</title>
+</head>
+<body>
     <h1>Welcome, Admin</h1>
     <h2>Your Profile</h2>
     <p>First Name: <?php echo htmlspecialchars($first_name); ?></p>
     <p>Last Name: <?php echo htmlspecialchars($last_name); ?></p>
     <p>Email: <?php echo htmlspecialchars($email); ?></p>
 
+    <h2>Order History</h2>
+    <?php if (empty($orders)): ?>
+        <p>No orders found.</p>
+    <?php else: ?>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>User ID</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Delivery Method</th>
+                    <th>Order Date</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($orders as $order): ?>
+                    <tr>
+                        <td><?php echo $order['order_id']; ?></td>
+                        <td><?php echo $order['user_id']; ?></td>
+                        <td><?php echo number_format($order['total_price'], 2); ?> €</td>
+                        <td><?php echo ucfirst($order['status']); ?></td>
+                        <td><?php echo ucfirst($order['delivery_method']); ?></td>
+                        <td><?php echo $order['created_at']; ?></td>
+                        <td><a href="index.php?page=order_details&order_id=<?php echo $order['order_id']; ?>">View</a></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+
     <h2>Change Your Password</h2>
     <p>If you want to change your password, click the button below:</p>
-    <form action="index.php?page=update_profile" method="post">
+    <form action="index.php?page=update_profile" method="get">
         <button type="submit" class="btn btn-hotpink mt-2">Update Password</button>
     </form>
 
     <form action="content/logout.php" method="post">
         <button type="submit" class="btn btn-secondary mt-2">Logout</button>
     </form>
+    
     <form action="index.php?page=add_product" method="post">
-        <button type="submit" class="btn btn-hotpink mt-2">Add Produts</button>
+        <button type="submit" class="btn btn-hotpink mt-2">Add Products</button>
     </form>
 
-    <?php if (isset($product_message)) echo "<p>$product_message</p>"; ?> 
+    <style>
+    .btn-hotpink {
+        background-color: hotpink;
+        color: white;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
 
+    .btn-hotpink:hover {
+        background-color: #ff69b4;
+        transform: scale(1.1);
+        color: white;
+    }
+
+    .btn-hotpink:focus {
+        box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
+        outline: none;
+    }
+    </style>
+</body>
+</html>
