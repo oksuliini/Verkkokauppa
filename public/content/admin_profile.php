@@ -68,11 +68,13 @@ mysqli_close($link);
         <button type="submit" class="btn btn-hotpink mt-2">Update Profile</button>
     </form>
 
+    <form action="index.php?page=add_product" method="post">
+        <button type="submit" class="btn btn-hotpink mt-2">Add Products</button>
+    </form>
+
     <form action="content/logout.php" method="post">
         <button type="submit" class="btn btn-secondary mt-2">Logout</button>
     </form>
     
-    <form action="index.php?page=add_product" method="post">
-        <button type="submit" class="btn btn-hotpink mt-2">Add Products</button>
-    </form>
+    
 

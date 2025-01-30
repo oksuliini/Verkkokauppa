@@ -25,23 +25,19 @@ if ($row = mysqli_fetch_assoc($result)) {
         <h1>$name</h1>
         <p>$description</p>
         <p>Price: $$price</p>
-        <p>Stock: $stock_quantity</p>
+        <p>Stock: $stock_quantity</p>";
 
-        <!-- Add to Cart Form -->
-        <form action='content/cart_add.php' method='post' onsubmit='return showAddToCartAlert(\"$name\", this.quantity.value)'>
-            <input type='hidden' name='product_id' value='$productId'>
-            <input type='hidden' name='name' value='$name'>
-            <input type='hidden' name='price' value='{$row['price']}'>
-            <label for='quantity_$productId'>Quantity:</label>
-            <input type='number' id='quantity_$productId' name='quantity' value='1' min='1' max='$stock_quantity' class='form-control d-inline' style='width: 70px;'>
-            <button type='submit' class='btn btn-hotpink mt-2'>Add to Cart</button>
-        </form>
-    </div>";
+    // Show Edit Button Only for Admins
+    if (isset($_SESSION['SESS_ROLE']) && $_SESSION['SESS_ROLE'] === 'admin') {
+        // Correct the Edit button link by concatenating $productId directly into the href attribute
+        echo "<a href='index.php?page=edit_product&id=" . $productId . "' class='btn btn-warning mt-2'>Edit Product</a>";
+    }
+
+    echo "</div>";
 } else {
     echo "<p>Product not found.</p>";
 }
+
 mysqli_stmt_close($stmt);
 mysqli_close($link);
 ?>
-
-
