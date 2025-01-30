@@ -33,15 +33,6 @@ foreach ($_SESSION['cart'] as $productId => $item) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kassa</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Lisää tarvittaessa ulkoinen CSS -->
-</head>
-<body>
     <div class="container mt-5">
         <h1 class="mb-4">Kassa</h1>
 
@@ -113,25 +104,5 @@ foreach ($_SESSION['cart'] as $productId => $item) {
             <a href="index.php?page=cart" class="btn btn-secondary">Palaa ostoskoriin</a>
         </div>
     </div>
-</body>
-</html>
 
-<style>
-.btn-hotpink {
-    background-color: hotpink;
-    color: white;
-    border: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
-.btn-hotpink:hover {
-    background-color: #ff69b4;
-    transform: scale(1.1);
-    color: white;
-}
-
-.btn-hotpink:focus {
-    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
-    outline: none;
-}
-</style>

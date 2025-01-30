@@ -29,31 +29,39 @@ if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
     </div>
 
     <!-- Search Bar and Categories in the Center -->
-     
     <div class="d-flex align-items-center" style="flex-grow: 1; justify-content: center;">
-       <!-- Categories -->
-       <ul class="navbar-nav ms-2">
+      <!-- Categories -->
+      <ul class="navbar-nav ms-2">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Categories
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Plush Toys</a></li>
-            <li><a class="dropdown-item" href="#">Accessories</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Special Edition</a></li>
+            <?php
+            $link = getDbConnection(); // Connect to the database
+            $categoryQuery = "SELECT * FROM categories"; // Get all categories
+            $categoryResult = mysqli_query($link, $categoryQuery);
+
+            // Loop through categories and create menu items
+            while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
+                $categoryId = $categoryRow['category_id'];
+                $categoryName = htmlspecialchars($categoryRow['name']);
+                echo "<li><a class='dropdown-item' href='index.php?category=$categoryId'>$categoryName</a></li>";
+            }
+
+            mysqli_close($link); // Close the connection
+            ?>
           </ul>
         </li>
       </ul>
-      
+
+      <!-- Search Bar -->
       <form class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
         <input type="search" class="form-control" placeholder="Search Hello Kitty" aria-label="Search">
         <button class="btn btn-white ms-2" type="submit" aria-label="Search">
           <i class="fas fa-search"></i>
         </button>
       </form>
-
-     
     </div>
 
     <!-- Cart and Profile Icons on the Right -->
