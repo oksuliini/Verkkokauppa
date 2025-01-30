@@ -24,15 +24,6 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 mysqli_close($link);
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Profile</title>
-</head>
-<body>
     <h1>Welcome, Admin</h1>
     <h2>Your Profile</h2>
     <p>First Name: <?php echo htmlspecialchars($first_name); ?></p>
@@ -73,8 +64,8 @@ mysqli_close($link);
 
     <h2>Change Your Password</h2>
     <p>If you want to change your password, click the button below:</p>
-    <form action="index.php?page=update_profile" method="get">
-        <button type="submit" class="btn btn-hotpink mt-2">Update Password</button>
+    <form action="index.php?page=update_profile" method="post">
+        <button type="submit" class="btn btn-hotpink mt-2">Update Profile</button>
     </form>
 
     <form action="content/logout.php" method="post">
@@ -85,24 +76,3 @@ mysqli_close($link);
         <button type="submit" class="btn btn-hotpink mt-2">Add Products</button>
     </form>
 
-    <style>
-    .btn-hotpink {
-        background-color: hotpink;
-        color: white;
-        border: none;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .btn-hotpink:hover {
-        background-color: #ff69b4;
-        transform: scale(1.1);
-        color: white;
-    }
-
-    .btn-hotpink:focus {
-        box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
-        outline: none;
-    }
-    </style>
-</body>
-</html>

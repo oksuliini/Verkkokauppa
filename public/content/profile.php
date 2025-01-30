@@ -35,14 +35,7 @@ mysqli_stmt_close($stmt);
 mysqli_close($link);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-</head>
-<body>
+
     <h1>User Profile</h1>
     <p><strong>First Name:</strong> <?php echo htmlspecialchars($first_name); ?></p>
     <p><strong>Last Name:</strong> <?php echo htmlspecialchars($last_name); ?></p>
@@ -90,24 +83,3 @@ mysqli_close($link);
         <button type="submit" class="btn btn-secondary">Logout</button>
     </form>
 
-    <style>
-        .btn-hotpink {
-            background-color: hotpink;
-            color: white;
-            border: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .btn-hotpink:hover {
-            background-color: #ff69b4;
-            transform: scale(1.1);
-            color: white;
-        }
-
-        .btn-hotpink:focus {
-            box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
-            outline: none;
-        }
-    </style>
-</body>
-</html>

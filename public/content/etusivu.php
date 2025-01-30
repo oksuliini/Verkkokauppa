@@ -1,7 +1,22 @@
 <?php
-// Fetch all products from the database
+
+// Connect to the database
 $link = getDbConnection();
-$query = "SELECT * FROM products ORDER BY created_at DESC";
+
+$categoryId = isset($_GET['category']) ? intval($_GET['category']) : 0;
+
+if ($categoryId > 0) {
+    $query = "SELECT p.* FROM products p
+              JOIN product_categories pc ON p.product_id = pc.product_id
+              WHERE pc.category_id = $categoryId
+              ORDER BY p.created_at DESC";
+} else {
+    $query = "SELECT * FROM products ORDER BY created_at DESC";  // Show all products if no category is selected
+}
+
+$result = mysqli_query($link, $query);
+
+
 $result = mysqli_query($link, $query);
 
 if (!$result) {
@@ -49,58 +64,3 @@ if (!$result) {
     ?>
 </div>
 
-<!-- Styling for product cards and buttons -->
-<style>
-.products-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: flex-start;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.product-card {
-    flex: 1 1 calc(25% - 16px);
-    max-width: calc(25% - 16px);
-    background-color: #ffccd5;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-    transition: transform 0.3s ease;
-}
-
-.product-image {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin: 0 auto;
-    display: block;
-}
-
-.product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Custom hot pink button for Add to Cart */
-.btn-hotpink {
-    background-color: hotpink;
-    color: white;
-    border: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-hotpink:hover {
-    background-color: #ff69b4;
-    transform: scale(1.1);
-    color: white;
-}
-
-.btn-hotpink:focus {
-    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.5);
-    outline: none;
-}
-</style>
