@@ -3,29 +3,53 @@
 // Connect to the database
 $link = getDbConnection();
 
+// Handle search and category filters
+$searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categoryId = isset($_GET['category']) ? intval($_GET['category']) : 0;
 
-if ($categoryId > 0) {
-    $query = "SELECT p.* FROM products p
-              JOIN product_categories pc ON p.product_id = pc.product_id
-              WHERE pc.category_id = $categoryId
-              ORDER BY p.created_at DESC";
+if (!empty($searchQuery) && $categoryId > 0) {
+    // Search within a specific category
+    $stmt = mysqli_prepare($link, "SELECT p.* FROM products p
+                                   JOIN product_categories pc ON p.product_id = pc.product_id
+                                   WHERE pc.category_id = ? AND p.name LIKE CONCAT('%', ?, '%')
+                                   ORDER BY p.created_at DESC");
+    mysqli_stmt_bind_param($stmt, "is", $categoryId, $searchQuery);
+} elseif (!empty($searchQuery)) {
+    // Search all products
+    $stmt = mysqli_prepare($link, "SELECT * FROM products WHERE name LIKE CONCAT('%', ?, '%') ORDER BY created_at DESC");
+    mysqli_stmt_bind_param($stmt, "s", $searchQuery);
+} elseif ($categoryId > 0) {
+    // Filter by category only
+    $stmt = mysqli_prepare($link, "SELECT p.* FROM products p
+                                   JOIN product_categories pc ON p.product_id = pc.product_id
+                                   WHERE pc.category_id = ?
+                                   ORDER BY p.created_at DESC");
+    mysqli_stmt_bind_param($stmt, "i", $categoryId);
 } else {
-    $query = "SELECT * FROM products ORDER BY created_at DESC";  // Show all products if no category is selected
+    // Show all products by default
+    $stmt = mysqli_prepare($link, "SELECT * FROM products ORDER BY created_at DESC");
 }
 
-$result = mysqli_query($link, $query);
+// Execute the query
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
-
-$result = mysqli_query($link, $query);
-
+// Check for errors
 if (!$result) {
     die("Error fetching products: " . mysqli_error($link));
 }
 ?>
 
 <h1>Tervetuloa Hello Kitty kauppaamme</h1>
-<h1>Our Products</h1>
+
+<!-- Show Search Query Message (if applicable) -->
+<?php if (!empty($searchQuery)): ?>
+    <h2>Search Results for "<?php echo htmlspecialchars($searchQuery); ?>"</h2>
+<?php elseif ($categoryId > 0): ?>
+    <h2>Category: <?php echo htmlspecialchars(getCategoryName($categoryId, $link)); ?></h2>
+<?php else: ?>
+    <h2>Our Products</h2>
+<?php endif; ?>
 
 <div class="products-container d-flex flex-wrap">
     <?php
@@ -59,8 +83,19 @@ if (!$result) {
             </div>";
         }
     } else {
-        echo "<p>No products available at the moment. Please check back later.</p>";
+        echo "<p>No products found.</p>";
     }
     ?>
 </div>
 
+<?php
+// Function to get category name
+function getCategoryName($categoryId, $link) {
+    $stmt = mysqli_prepare($link, "SELECT name FROM categories WHERE category_id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $categoryId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($result);
+    return $row ? $row['name'] : "Unknown Category";
+}
+?>

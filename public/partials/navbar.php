@@ -1,7 +1,7 @@
 <?php
-$profileLink = "index.php?page=login"; // Default to login if not logged in
+$profileLink = "index.php?page=login"; // Default login page
 
-if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
+if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
     if (isset($_SESSION['SESS_ROLE'])) {
         if ($_SESSION['SESS_ROLE'] === 'admin') {
             $profileLink = "index.php?page=admin_profile"; // Admin profile page
@@ -30,7 +30,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
 
     <!-- Search Bar and Categories in the Center -->
     <div class="d-flex align-items-center" style="flex-grow: 1; justify-content: center;">
-      <!-- Categories -->
+      <!-- Categories Dropdown -->
       <ul class="navbar-nav ms-2">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -46,7 +46,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
             while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
                 $categoryId = $categoryRow['category_id'];
                 $categoryName = htmlspecialchars($categoryRow['name']);
-                echo "<li><a class='dropdown-item' href='index.php?category=$categoryId'>$categoryName</a></li>";
+                echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$categoryId'>$categoryName</a></li>";
             }
 
             mysqli_close($link); // Close the connection
@@ -56,10 +56,11 @@ if (isset($_SESSION['SESS_USER_ID'])) { // Check if the user is logged in
       </ul>
 
       <!-- Search Bar -->
-      <form class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
-        <input type="search" class="form-control" placeholder="Search Hello Kitty" aria-label="Search">
+      <form action="index.php" method="GET" class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
+        <input type="hidden" name="page" value="etusivu"> <!-- Ensures search stays on the front page -->
+        <input type="search" name="search" class="form-control" placeholder="Search Hello Kitty" aria-label="Search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
         <button class="btn btn-white ms-2" type="submit" aria-label="Search">
-          <i class="fas fa-search"></i>
+            <i class="fas fa-search"></i>
         </button>
       </form>
     </div>
