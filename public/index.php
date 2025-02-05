@@ -4,7 +4,7 @@ require_once('../config/config.php');  // Include database connection configurat
 // Define available pages
 $pages = array(
     "etusivu", "cart", "checkout", "profile", "login", "product", "register", "update_profile",
-    "admin_profile", "add_product", "edit_product"
+    "admin_profile", "add_product", "edit_product", "order_details"
 );
 
 // Default page to display is 'etusivu'
