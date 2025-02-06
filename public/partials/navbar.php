@@ -32,28 +32,46 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
     <div class="d-flex align-items-center" style="flex-grow: 1; justify-content: center;">
       <!-- Categories Dropdown -->
       <ul class="navbar-nav ms-2">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Categories
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <?php
             $link = getDbConnection(); // Connect to the database
-            $categoryQuery = "SELECT * FROM categories"; // Get all categories
+            $categoryQuery = "SELECT * FROM categories WHERE parent_id IS NULL"; // Get only main categories
             $categoryResult = mysqli_query($link, $categoryQuery);
 
-            // Loop through categories and create menu items
             while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
                 $categoryId = $categoryRow['category_id'];
                 $categoryName = htmlspecialchars($categoryRow['name']);
-                echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$categoryId'>$categoryName</a></li>";
+
+                // Check if this category has subcategories
+                $subQuery = "SELECT * FROM categories WHERE parent_id = $categoryId";
+                $subResult = mysqli_query($link, $subQuery);
+                
+                if (mysqli_num_rows($subResult) > 0) {
+                    echo "<li class='dropdown-submenu'>
+                            <a class='dropdown-item dropdown-toggle' href='#'>$categoryName</a>
+                            <ul class='dropdown-menu'>";
+
+                    while ($subRow = mysqli_fetch_assoc($subResult)) {
+                        $subId = $subRow['category_id'];
+                        $subName = htmlspecialchars($subRow['name']);
+                        echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$subId'>$subName</a></li>";
+                    }
+
+                    echo "</ul></li>";
+                } else {
+                    echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$categoryId'>$categoryName</a></li>";
+                }
             }
 
-            mysqli_close($link); // Close the connection
+            mysqli_close($link);
             ?>
-          </ul>
-        </li>
-      </ul>
+        </ul>
+    </li>
+</ul>
 
       <!-- Search Bar -->
       <form action="index.php" method="GET" class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
@@ -139,6 +157,37 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
   background-color: #ffe4e1;
   border-radius: 5px;
   border: none;
+}
+
+/* Submenus */
+.navbar .dropdown-submenu .dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+/* Show submenu on hover */
+.navbar .dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+/* Links inside the dropdown */
+.dropdown-item {
+  font-size: 1rem;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-item:hover {
+  background-color: #ff6f91;
 }
 
 /* Responsive Styles */
