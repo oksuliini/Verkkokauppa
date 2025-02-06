@@ -10,7 +10,6 @@ if (!isset($_SESSION['SESS_USER_ID'])) {
 
 $userId = intval($_SESSION['SESS_USER_ID']);
 
-
 // Tarkista, että ostoskori ei ole tyhjä
 if (empty($_SESSION['cart'])) {
     header("Location: ../index.php?page=cart");
@@ -86,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Tyhjennä ostoskori
         unset($_SESSION['cart']);
 
-        // Ohjaa kiitossivulle
-        header("Location: ../index.php?page=order_success&order_id=$orderId");
+        // Näytä JavaScriptin alert onnistumisesta
+        echo "<script>alert('Tilauksesi on vastaanotettu! Kiitos tilauksestasi.'); window.location.href='../index.php?page=etusivu';</script>";
         exit();
     } catch (Exception $e) {
         // Jos virhe tapahtuu, peru transaktio
