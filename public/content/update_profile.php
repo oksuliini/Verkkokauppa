@@ -1,57 +1,49 @@
 <?php
+session_start();
+require_once('../../config/config.php');
 
-// Check if the user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
-    header("Location: index.php?page=login");
+    header("Location: ../index.php?page=login");
     exit();
 }
 
 $user_id = $_SESSION['SESS_USER_ID'];
-
-// Connect to the database
 $link = getDbConnection();
 
-// Fetch user details from the database
-$query = "SELECT first_name, last_name, email FROM users WHERE user_id = ?";
-$stmt = mysqli_prepare($link, $query);
-mysqli_stmt_bind_param($stmt, "i", $user_id);
+$first_name = trim($_POST['first_name']);
+$last_name = trim($_POST['last_name']);
+$email = trim($_POST['email']);
+$phone = trim($_POST['phone']);
+$address = trim($_POST['address']);
+
+// Tarkista, onko sähköposti jo käytössä toisella käyttäjällä
+$email_check_query = "SELECT user_id FROM users WHERE email = ? AND user_id != ?";
+$stmt = mysqli_prepare($link, $email_check_query);
+mysqli_stmt_bind_param($stmt, "si", $email, $user_id);
 mysqli_stmt_execute($stmt);
-mysqli_stmt_bind_result($stmt, $first_name, $last_name, $email);
-mysqli_stmt_fetch($stmt);
+mysqli_stmt_store_result($stmt);
+if (mysqli_stmt_num_rows($stmt) > 0) {
+    $_SESSION['ERROR_MESSAGE'] = "This email is already in use.";
+    header("Location: ../index.php?page=profile");
+    exit();
+}
 mysqli_stmt_close($stmt);
 
+// Päivitä käyttäjätiedot
+$update_query = "UPDATE users SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ? WHERE user_id = ?";
+$stmt = mysqli_prepare($link, $update_query);
+mysqli_stmt_bind_param($stmt, "sssssi", $first_name, $last_name, $email, $phone, $address, $user_id);
+$result = mysqli_stmt_execute($stmt);
+
+if ($result) {
+    $_SESSION['SUCCESS_MESSAGE'] = "Profile updated successfully.";
+} else {
+    $_SESSION['ERROR_MESSAGE'] = "An error occurred while updating your profile.";
+}
+
+mysqli_stmt_close($stmt);
 mysqli_close($link);
-?>
-    <h1>Update Your Password</h1>
 
-    <?php
-// Display success or error messages
-if (isset($_SESSION['SUCCESS_MESSAGE'])) {
-    echo "<p style='color: green;'>" . htmlspecialchars($_SESSION['SUCCESS_MESSAGE']) . "</p>";
-    unset($_SESSION['SUCCESS_MESSAGE']); // Clear the message after displaying it
-}
-
-if (isset($_SESSION['ERROR_MESSAGE'])) {
-    echo "<p style='color: red;'>" . htmlspecialchars($_SESSION['ERROR_MESSAGE']) . "</p>";
-    unset($_SESSION['ERROR_MESSAGE']); // Clear the message after displaying it
-}
-?>
-
-
-    <form action="content/update_profile_process.php" method="POST">
-        <label for="current_password">Current Password:</label>
-        <input type="password" id="current_password" name="current_password" required><br>
-
-        <label for="new_password">New Password:</label>
-        <input type="password" id="new_password" name="new_password" required><br>
-
-        <label for="confirm_password">Confirm New Password:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required><br><br>
-
-        <form action="index.php?page=update_profile" method="post">
-        <button type="submit" class="btn btn-hotpink mt-2">Update Profile</button>
-    </form>
-    </form>
-    <form action="content/logout.php" method="post">
-        <button type="submit" class="btn btn-hotpink mt-2">Logout</button>
-    </form>
+// Palataan profiilisivulle
+header("Location: ../index.php?page=profile");
+exit();
