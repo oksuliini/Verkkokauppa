@@ -1,6 +1,7 @@
 <?php
 $link = getDbConnection();
 
+
 $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categoryId = isset($_GET['category']) ? intval($_GET['category']) : 0;
 
@@ -77,6 +78,7 @@ if (!empty($categoryList)) {
     // If no category is selected, show all products
     $query = "SELECT * FROM products WHERE name LIKE ? ORDER BY created_at DESC";
     $stmt = mysqli_prepare($link, $query);
+
 
     if ($stmt) {
         $searchParam = "%$searchQuery%";

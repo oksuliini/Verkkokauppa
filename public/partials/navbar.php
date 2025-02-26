@@ -32,8 +32,8 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
     <div class="d-flex align-items-center" style="flex-grow: 1; justify-content: center;">
       <!-- Categories Dropdown -->
       <ul class="navbar-nav ms-2">
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Categories
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -60,6 +60,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
                 $subId = $subRow['category_id'];
                 $subName = htmlspecialchars($subRow['name']);
                 echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$subId'>$subName</a></li>";
+
             }
             echo "</ul>";
         }
@@ -67,12 +68,12 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
         echo "</li>";
     }
 
-    mysqli_close($link);
-    ?>
-</ul>
-    </li>
-</ul>
 
+            mysqli_close($link); // Close the connection
+            ?>
+          </ul>
+        </li>
+      </ul
       <!-- Search Bar -->
       <form action="index.php" method="GET" class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
         <input type="hidden" name="page" value="etusivu"> <!-- Ensures search stays on the front page -->
@@ -164,6 +165,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
   padding: 5px 0;
 }
 
+
 /* Näytetään dropdown-menu, kun hoverataan pääkategorian päälle */
 .navbar .dropdown:hover > .dropdown-menu {
   display: block;
@@ -219,6 +221,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
 .dropdown-item:hover {
   background-color: #ff6f91;
 }
+
 
 /* Responsive Styles */
 @media (max-width: 768px) {
