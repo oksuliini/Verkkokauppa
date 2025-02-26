@@ -35,26 +35,45 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Categories
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <?php
-            $link = getDbConnection(); // Connect to the database
-            $categoryQuery = "SELECT * FROM categories"; // Get all categories
-            $categoryResult = mysqli_query($link, $categoryQuery);
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <?php
+    $link = getDbConnection();
+    $categoryQuery = "SELECT * FROM categories WHERE parent_id IS NULL"; 
+    $categoryResult = mysqli_query($link, $categoryQuery);
 
-            // Loop through categories and create menu items
-            while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
-                $categoryId = $categoryRow['category_id'];
-                $categoryName = htmlspecialchars($categoryRow['name']);
-                echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$categoryId'>$categoryName</a></li>";
+    while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
+        $categoryId = $categoryRow['category_id'];
+        $categoryName = htmlspecialchars($categoryRow['name']);
+
+        // Fetch subcategories
+        $subQuery = "SELECT * FROM categories WHERE parent_id = $categoryId";
+        $subResult = mysqli_query($link, $subQuery);
+
+        echo "<li class='dropdown-submenu'>";  
+        echo "<a class='dropdown-item' href='index.php?page=etusivu&category=$categoryId'>$categoryName</a>";
+        
+        // Display subcategories
+        if (mysqli_num_rows($subResult) > 0) {
+            echo "<ul class='dropdown-menu subcategories'>";
+            while ($subRow = mysqli_fetch_assoc($subResult)) {
+                $subId = $subRow['category_id'];
+                $subName = htmlspecialchars($subRow['name']);
+                echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$subId'>$subName</a></li>";
+
             }
+            echo "</ul>";
+        }
+
+        echo "</li>";
+    }
+
 
             mysqli_close($link); // Close the connection
             ?>
           </ul>
         </li>
-      </ul>
-
+      </ul
       <!-- Search Bar -->
       <form action="index.php" method="GET" class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
         <input type="hidden" name="page" value="etusivu"> <!-- Ensures search stays on the front page -->
@@ -87,7 +106,6 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
 </nav>
 
 <style>
-/* General Navbar Style */
 .navbar {
   background-color: #ffccd5;
   padding: 10px 20px;
@@ -139,7 +157,71 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
   background-color: #ffe4e1;
   border-radius: 5px;
   border: none;
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  min-width: 180px;
+  padding: 5px 0;
 }
+
+
+/* Näytetään dropdown-menu, kun hoverataan pääkategorian päälle */
+.navbar .dropdown:hover > .dropdown-menu {
+  display: block;
+}
+
+/* Submenu asettelu */
+.navbar .dropdown-submenu {
+  position: relative;
+}
+
+/* Alavalikko oletuksena piilossa */
+.navbar .dropdown-submenu .dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 100%; /* Siirretään suoraan pääkategorian viereen */
+  top: 0;
+  min-width: 180px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+
+/* Näytetään alakategoriat hoverilla */
+.navbar .dropdown:hover > .dropdown-menu,
+.navbar .dropdown-submenu:hover > .dropdown-menu {
+  display: block !important;
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+/* Subcategory box */
+.subcategories {
+    background-color: #ffe4e1;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+/* Subcategory items */
+.subcategories li {
+    list-style: none;
+    padding: 5px 0;
+}
+
+/* Links inside the dropdown */
+.dropdown-item {
+  font-size: 1rem;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-item:hover {
+  background-color: #ff6f91;
+}
+
 
 /* Responsive Styles */
 @media (max-width: 768px) {
@@ -163,3 +245,21 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
   }
 }
 </style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Hae kaikki pääkategoriat
+    document.querySelectorAll(".main-category").forEach(category => {
+        category.addEventListener("click", function() {
+            let categoryId = this.getAttribute("data-category");
+            let subMenu = document.getElementById("subcategories-" + categoryId);
+
+            // Näytä/piilota alakategoriat
+            if (subMenu.style.display === "none") {
+                subMenu.style.display = "block";
+            } else {
+                subMenu.style.display = "none";
+            }
+        });
+    });
+});
+</script>

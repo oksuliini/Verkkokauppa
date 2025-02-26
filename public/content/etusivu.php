@@ -1,48 +1,98 @@
 <?php
-
-// Connect to the database
 $link = getDbConnection();
 
-// Handle search and category filters
+
 $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categoryId = isset($_GET['category']) ? intval($_GET['category']) : 0;
 
-if (!empty($searchQuery) && $categoryId > 0) {
-    // Search within a specific category
-    $stmt = mysqli_prepare($link, "SELECT p.* FROM products p
-                                   JOIN product_categories pc ON p.product_id = pc.product_id
-                                   WHERE pc.category_id = ? AND p.name LIKE CONCAT('%', ?, '%')
-                                   ORDER BY p.created_at DESC");
-    mysqli_stmt_bind_param($stmt, "is", $categoryId, $searchQuery);
-} elseif (!empty($searchQuery)) {
-    // Search all products
-    $stmt = mysqli_prepare($link, "SELECT * FROM products WHERE name LIKE CONCAT('%', ?, '%') ORDER BY created_at DESC");
-    mysqli_stmt_bind_param($stmt, "s", $searchQuery);
-} elseif ($categoryId > 0) {
-    // Filter by category only
-    $stmt = mysqli_prepare($link, "SELECT p.* FROM products p
-                                   JOIN product_categories pc ON p.product_id = pc.product_id
-                                   WHERE pc.category_id = ?
-                                   ORDER BY p.created_at DESC");
-    mysqli_stmt_bind_param($stmt, "i", $categoryId);
-} else {
-    // Show all products by default
-    $stmt = mysqli_prepare($link, "SELECT * FROM products ORDER BY created_at DESC");
+$categoryList = []; // Stores selected category + its subcategories
+
+if ($categoryId > 0) {
+    // Get parent ID of selected category
+    $parentCheckQuery = "SELECT parent_id FROM categories WHERE category_id = ?";
+    $parentCheckStmt = mysqli_prepare($link, $parentCheckQuery);
+    
+    if ($parentCheckStmt) {
+        mysqli_stmt_bind_param($parentCheckStmt, "i", $categoryId);
+        mysqli_stmt_execute($parentCheckStmt);
+        $parentResult = mysqli_stmt_get_result($parentCheckStmt);
+        $parentRow = mysqli_fetch_assoc($parentResult);
+        $parentId = $parentRow ? $parentRow['parent_id'] : null;
+        mysqli_stmt_close($parentCheckStmt);
+    }
+
+    // If this is a main category, fetch its subcategories
+    if ($parentId === null) {
+        $categoryList[] = $categoryId; // Include main category
+
+        // Get all its subcategories
+        $subQuery = "SELECT category_id FROM categories WHERE parent_id = ?";
+        $subStmt = mysqli_prepare($link, $subQuery);
+        
+        if ($subStmt) {
+            mysqli_stmt_bind_param($subStmt, "i", $categoryId);
+            mysqli_stmt_execute($subStmt);
+            $subResult = mysqli_stmt_get_result($subStmt);
+            
+            while ($subRow = mysqli_fetch_assoc($subResult)) {
+                $categoryList[] = $subRow['category_id']; // Add subcategories
+            }
+
+            mysqli_stmt_close($subStmt);
+        }
+    } else {
+        // If it's a subcategory, show only its products
+        $categoryList[] = $categoryId;
+    }
 }
 
-// Execute the query
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+// Prepare SQL query
+if (!empty($categoryList)) {
+    $placeholders = implode(',', array_fill(0, count($categoryList), '?'));
+    $query = "SELECT DISTINCT p.* FROM products p
+              JOIN product_categories pc ON p.product_id = pc.product_id
+              WHERE pc.category_id IN ($placeholders) 
+              AND p.name LIKE ?
+              ORDER BY p.created_at DESC";
+    
+    $stmt = mysqli_prepare($link, $query);
 
-// Check for errors
-if (!$result) {
-    die("Error fetching products: " . mysqli_error($link));
+    if ($stmt) {
+        $types = str_repeat('i', count($categoryList)) . 's';
+        $params = array_merge($categoryList, ["%$searchQuery%"]);
+
+        // Bind parameters correctly
+        $refParams = [];
+        $refParams[] = &$types;
+        foreach ($params as $key => $value) {
+            $refParams[] = &$params[$key];
+        }
+
+        call_user_func_array([$stmt, 'bind_param'], $refParams);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    } else {
+        die("Database error: " . mysqli_error($link));
+    }
+} else {
+    // If no category is selected, show all products
+    $query = "SELECT * FROM products WHERE name LIKE ? ORDER BY created_at DESC";
+    $stmt = mysqli_prepare($link, $query);
+
+
+    if ($stmt) {
+        $searchParam = "%$searchQuery%";
+        mysqli_stmt_bind_param($stmt, "s", $searchParam);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    } else {
+        die("Database error: " . mysqli_error($link));
+    }
 }
 ?>
 
 <h1>Tervetuloa Hello Kitty kauppaamme</h1>
 
-<!-- Show Search Query Message (if applicable) -->
 <?php if (!empty($searchQuery)): ?>
     <h2>Search Results for "<?php echo htmlspecialchars($searchQuery); ?>"</h2>
 <?php elseif ($categoryId > 0): ?>
@@ -90,7 +140,8 @@ if (!$result) {
 
 <?php
 // Function to get category name
-function getCategoryName($categoryId, $link) {
+function getCategoryName($categoryId, $link)
+{
     $stmt = mysqli_prepare($link, "SELECT name FROM categories WHERE category_id = ?");
     mysqli_stmt_bind_param($stmt, "i", $categoryId);
     mysqli_stmt_execute($stmt);
@@ -98,4 +149,7 @@ function getCategoryName($categoryId, $link) {
     $row = mysqli_fetch_assoc($result);
     return $row ? $row['name'] : "Unknown Category";
 }
+
+mysqli_stmt_close($stmt);
+mysqli_close($link);
 ?>
