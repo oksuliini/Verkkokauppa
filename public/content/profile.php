@@ -32,70 +32,92 @@ mysqli_stmt_close($stmt);
 mysqli_close($link);
 ?>
 
-<h1>User Profile</h1>
+<div class="container mt-5 profile-page">
+    <h1 class="text-center mb-4">Profiilisi</h1>
 
-<!-- Profiilin tiedot -->
-<form id="profileForm" action="content/update_profile.php" method="post">
-    <p><strong>First Name:</strong> <span id="first_name_display"><?php echo htmlspecialchars($first_name); ?></span></p>
-    <input type="text" id="first_name_input" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" style="display: none;">
+    <!-- Profiilin tiedot -->
+    <form id="profileForm" action="content/update_profile.php" method="post" class="profile-form">
+        <div class="profile-info">
+            <div class="form-group">
+                <label for="first_name" class="form-label">Etunimi</label>
+                <p id="first_name_display"><?php echo htmlspecialchars($first_name); ?></p>
+                <input type="text" id="first_name_input" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" class="form-control" style="display: none;">
+            </div>
+            <div class="form-group">
+                <label for="last_name" class="form-label">Sukunimi</label>
+                <p id="last_name_display"><?php echo htmlspecialchars($last_name); ?></p>
+                <input type="text" id="last_name_input" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" class="form-control" style="display: none;">
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">Sähköposti</label>
+                <p id="email_display"><?php echo htmlspecialchars($email); ?></p>
+                <input type="email" id="email_input" name="email" value="<?php echo htmlspecialchars($email); ?>" class="form-control" style="display: none;">
+            </div>
+            <div class="form-group">
+                <label for="phone" class="form-label">Puhelinnumero</label>
+                <p id="phone_display"><?php echo htmlspecialchars($phone); ?></p>
+                <input type="text" id="phone_input" name="phone" value="<?php echo htmlspecialchars($phone); ?>" class="form-control" style="display: none;">
+            </div>
+            <div class="form-group">
+                <label for="address" class="form-label">Osoite</label>
+                <p id="address_display"><?php echo nl2br(htmlspecialchars($address)); ?></p>
+                <textarea id="address_input" name="address" class="form-control" style="display: none;"><?php echo htmlspecialchars($address); ?></textarea>
+            </div>
+        </div>
 
-    <p><strong>Last Name:</strong> <span id="last_name_display"><?php echo htmlspecialchars($last_name); ?></span></p>
-    <input type="text" id="last_name_input" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" style="display: none;">
+        <div class="form-actions">
+            <button type="button" class="btn btn-primary" id="editButton" onclick="enableEdit()">Muokkaa profiilia</button>
+            <button type="submit" class="btn btn-success" id="saveButton" style="display: none;">Tallenna muutokset</button>
+        </div>
+    </form>
 
-    <p><strong>Email:</strong> <span id="email_display"><?php echo htmlspecialchars($email); ?></span></p>
-    <input type="email" id="email_input" name="email" value="<?php echo htmlspecialchars($email); ?>" style="display: none;">
+    <!-- Linkki salasanan vaihtoon -->
+    <div class="password-change">
+        <h2>Vaihda salasana</h2>
+        <p>Jos haluat vaihtaa salasanasi, klikkaa alla olevaa painiketta:</p>
+        <a href="index.php?page=change_password_form" class="btn btn-warning">Vaihda salasana</a>
+    </div>
 
-    <p><strong>Phone:</strong> <span id="phone_display"><?php echo htmlspecialchars($phone); ?></span></p>
-    <input type="text" id="phone_input" name="phone" value="<?php echo htmlspecialchars($phone); ?>" style="display: none;">
+    <!-- Tilaushistoria -->
+    <div class="order-history">
+        <h2>Tilaushistoria</h2>
+        <?php if (empty($orders)): ?>
+            <p>Ei tilaushistoriaa.</p>
+        <?php else: ?>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Tilauksen ID</th>
+                        <th>Kokonais summa</th>
+                        <th>Status</th>
+                        <th>Toimitustapa</th>
+                        <th>Tilauspäivämäärä</th>
+                        <th>Yksityiskohdat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($orders as $order): ?>
+                        <tr>
+                            <td><?php echo $order['order_id']; ?></td>
+                            <td><?php echo number_format($order['total_price'], 2); ?> €</td>
+                            <td><?php echo ucfirst($order['status']); ?></td>
+                            <td><?php echo ucfirst($order['delivery_method']); ?></td>
+                            <td><?php echo $order['created_at']; ?></td>
+                            <td><a href="index.php?page=order_details&order_id=<?php echo $order['order_id']; ?>" class="btn btn-info btn-sm">Näytä</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
 
-    <p><strong>Address:</strong> <span id="address_display"><?php echo nl2br(htmlspecialchars($address)); ?></span></p>
-    <textarea id="address_input" name="address" style="display: none;"><?php echo htmlspecialchars($address); ?></textarea>
-
-    <button type="button" class="btn btn-hotpink mt-2" id="editButton" onclick="enableEdit()">Edit Profile</button>
-    <button type="submit" class="btn btn-hotpink mt-2" id="saveButton" style="display: none;">Save Changes</button>
-</form>
-
-<!-- Linkki salasanan vaihtoon -->
-<h2>Change Password</h2>
-<p>If you want to change your password, click the button below:</p>
-<a href="index.php?page=change_password_form" class="btn btn-hotpink mt-2">Change Password</a>
-
-<!-- Tilaushistoria -->
-<h2>Order History</h2>
-<?php if (empty($orders)): ?>
-    <p>No orders found.</p>
-<?php else: ?>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Total Price</th>
-                <th>Status</th>
-                <th>Delivery Method</th>
-                <th>Order Date</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($orders as $order): ?>
-                <tr>
-                    <td><?php echo $order['order_id']; ?></td>
-                    <td><?php echo number_format($order['total_price'], 2); ?> €</td>
-                    <td><?php echo ucfirst($order['status']); ?></td>
-                    <td><?php echo ucfirst($order['delivery_method']); ?></td>
-                    <td><?php echo $order['created_at']; ?></td>
-                    <td><a href="index.php?page=order_details&order_id=<?php echo $order['order_id']; ?>">View</a></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-<?php endif; ?>
-
-<!-- Logout -->
-<br>
-<form action="content/logout.php" method="post">
-    <button type="submit" class="btn btn-secondary">Logout</button>
-</form>
+    <!-- Logout -->
+    <div class="logout">
+        <form action="content/logout.php" method="post">
+            <button type="submit" class="btn btn-danger">Kirjaudu ulos</button>
+        </form>
+    </div>
+</div>
 
 <!-- JavaScript muokkauksen mahdollistamiseen -->
 <script>
@@ -119,3 +141,76 @@ function enableEdit() {
     document.getElementById('saveButton').style.display = 'inline';
 }
 </script>
+
+<style>
+    /* Yleinen asettelu */
+    .profile-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .profile-info p {
+        font-size: 16px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 8px;
+    }
+
+    .form-actions button {
+        margin-right: 10px;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .btn {
+        font-size: 16px;
+    }
+
+    .password-change, .order-history {
+        margin-top: 30px;
+    }
+
+    /* Painikkeiden tyylit */
+    .btn-primary {
+        background-color: #FF66B2;
+        border-color: #FF66B2;
+    }
+
+    .btn-primary:hover {
+        background-color: #FF3385;
+        border-color: #FF3385;
+    }
+
+    .btn-warning {
+        background-color: #FFC107;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background-color: #FFA000;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+</style>

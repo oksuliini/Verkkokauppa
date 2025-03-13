@@ -1,7 +1,6 @@
 <?php
 $link = getDbConnection();
 
-
 $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categoryId = isset($_GET['category']) ? intval($_GET['category']) : 0;
 
@@ -62,46 +61,45 @@ if (!empty($categoryList)) {
         $params = array_merge($categoryList, ["%$searchQuery%"]);
 
         // Bind parameters correctly
-        $refParams = [];
-        $refParams[] = &$types;
-        foreach ($params as $key => $value) {
-            $refParams[] = &$params[$key];
-        }
-
-        call_user_func_array([$stmt, 'bind_param'], $refParams);
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt); // Close statement after use
     } else {
-        die("Database error: " . mysqli_error($link));
+        error_log("Database error: " . mysqli_error($link));
+        echo "<p>Database error occurred. Please try again later.</p>";
+        exit;
     }
 } else {
     // If no category is selected, show all products
     $query = "SELECT * FROM products WHERE name LIKE ? ORDER BY created_at DESC";
     $stmt = mysqli_prepare($link, $query);
 
-
     if ($stmt) {
         $searchParam = "%$searchQuery%";
         mysqli_stmt_bind_param($stmt, "s", $searchParam);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt); // Close statement after use
     } else {
-        die("Database error: " . mysqli_error($link));
+        error_log("Database error: " . mysqli_error($link));
+        echo "<p>Database error occurred. Please try again later.</p>";
+        exit;
     }
 }
 ?>
 
-<h1>Tervetuloa Hello Kitty kauppaamme</h1>
+<h1>Tervetuloa Hello Kitty -kauppaamme</h1>
 
 <?php if (!empty($searchQuery)): ?>
-    <h2>Search Results for "<?php echo htmlspecialchars($searchQuery); ?>"</h2>
+    <h2>Hakutulokset haulle "<?php echo htmlspecialchars($searchQuery); ?>"</h2>
 <?php elseif ($categoryId > 0): ?>
-    <h2>Category: <?php echo htmlspecialchars(getCategoryName($categoryId, $link)); ?></h2>
+    <h2>Kategoria: <?php echo htmlspecialchars(getCategoryName($categoryId, $link)); ?></h2>
 <?php else: ?>
-    <h2>Our Products</h2>
+    <h2>Kaikki tuotteemme</h2><br><br><br>
 <?php endif; ?>
 
-<div class="products-container d-flex flex-wrap">
+<div class="products-container">
     <?php
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
@@ -112,31 +110,32 @@ if (!empty($categoryList)) {
             $imageUrl = file_exists($row['image_url']) ? $row['image_url'] : "images/placeholder.png";
 
             echo "
-            <div class='product-card border m-2 p-3' style='width: 300px;'>
+            <div class='product-card border p-3' style='width: 280px;'>
                 <img src='$imageUrl' alt='$name' class='product-image img-fluid' style='height: 200px; object-fit: cover;'>
                 <h2 class='product-name mt-2'>$name</h2>
-                <p class='product-price'>Price: $$price</p>
-                <p class='product-stock'>Stock: $stock_quantity</p>
+                <p class='product-price'>Hinta: $price €</p>
+                <p class='product-stock'>Varastossa: $stock_quantity kpl</p>
 
-                <!-- Add to Cart Form -->
+                <!-- Lisää ostoskoriin lomake -->
                 <form action='content/cart_add.php' method='post' onsubmit='return showAddToCartAlert(\"$name\", this.quantity.value)'>
                     <input type='hidden' name='product_id' value='$productId'>
                     <input type='hidden' name='name' value='$name'>
                     <input type='hidden' name='price' value='{$row['price']}'>
-                    <label for='quantity_$productId'>Quantity:</label>
+                    <label for='quantity_$productId'>Määrä:</label>
                     <input type='number' id='quantity_$productId' name='quantity' value='1' min='1' max='$stock_quantity' class='form-control d-inline' style='width: 70px;'>
-                    <button type='submit' class='btn btn-hotpink mt-2'>Add to Cart</button>
+                    <button type='submit' class='btn btn-hotpink mt-2'>Lisää ostoskoriin</button>
                 </form>
 
-                <!-- View Details Button -->
-                <a href='index.php?page=product&id=$productId' class='btn btn-secondary mt-2'>View Details</a>
+                <!-- Katso lisätietoja -painike -->
+                <a href='index.php?page=product&id=$productId' class='btn btn-secondary mt-2'>Katso lisätietoja</a>
             </div>";
         }
     } else {
-        echo "<p>No products found.</p>";
+        echo "<p>Ei löytynyt tuotteita.</p>";
     }
     ?>
 </div>
+
 
 <?php
 // Function to get category name
@@ -147,9 +146,9 @@ function getCategoryName($categoryId, $link)
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $row = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt); // Close statement after use
     return $row ? $row['name'] : "Unknown Category";
 }
 
-mysqli_stmt_close($stmt);
 mysqli_close($link);
 ?>
