@@ -5,6 +5,7 @@ if (!isset($_SESSION['SESS_USER_ID'])) {
     exit();
 }
 
+
 $user_id = $_SESSION['SESS_USER_ID'];
 $link = getDbConnection();
 

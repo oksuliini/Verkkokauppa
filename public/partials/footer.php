@@ -2,10 +2,10 @@
     <div class="container d-flex justify-content-center align-items-center position-relative">
         <!-- Centered Text -->
         <div class="text-center">
-            <p class="mb-2">&copy; <?php echo date("Y"); ?> Hello Kitty Verkkokauppa. Kaikki oikeudet pidätetään.</p>
+            <p class="mb-2">&copy; <?php echo date("Y"); ?> Hello Kitty Web Store. All rights reserved.</p>
             <p class="mb-0">
-                <a href="privacy.php" class="text-white text-decoration-none">Tietosuojakäytäntö</a> | 
-                <a href="terms.php" class="text-white text-decoration-none">Käyttöehdot</a>
+                <a href="privacy.php" class="text-white text-decoration-none">Privacy policy</a> | 
+                <a href="terms.php" class="text-white text-decoration-none">Terms of service</a>
             </p>
         </div>
 

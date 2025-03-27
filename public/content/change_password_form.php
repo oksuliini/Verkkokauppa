@@ -18,7 +18,15 @@ if (!isset($_SESSION['SESS_USER_ID'])) {
     <input type="password" id="confirm_password" name="confirm_password" required><br><br>
 
     <button type="submit" class="btn btn-hotpink mt-2">Change Password</button>
-    <a href="index.php?page=profile" class="btn btn-secondary mt-2">Back to Profile</a>
+    <?php
+$backToProfile = "index.php?page=profile"; // Oletus asiakkaille
+
+if (isset($_SESSION['SESS_ROLE']) && $_SESSION['SESS_ROLE'] === 'admin') {
+    $backToProfile = "index.php?page=admin_profile"; // Adminille eri sivu
+}
+?>
+
+<a href="<?php echo $backToProfile; ?>" class="btn btn-secondary mt-2">Back to Profile</a>
 
 </form>
 

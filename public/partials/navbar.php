@@ -16,14 +16,14 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
     <!-- Left Side -->
     <div class="d-flex align-items-center">
       <!-- Logo -->
-      <a class="navbar-brand me-3" href="index.php?page=etusivu">
+      <a class="navbar-brand me-3" href="index.php?page=home">
         <img src="images/kitty-logo.png" alt="Hello Kitty Logo" style="height: 35px;">
       </a>
 
       <!-- Left Links -->
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white" href="index.php?page=etusivu">Hello Kitty Verkkokauppa</a>
+          <a class="nav-link text-white" href="index.php?page=home">Hello Kitty Web Store</a>
         </li>
       </ul>
     </div>
@@ -40,7 +40,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
         <ul class="navbar-nav ms-2">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Kategoriat
+              Categories
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <?php
@@ -57,7 +57,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
                     $subResult = mysqli_query($link, $subQuery);
 
                     echo "<li class='dropdown-submenu'>";  
-                    echo "<a class='dropdown-item' href='index.php?page=etusivu&category=$categoryId'>$categoryName</a>";
+                    echo "<a class='dropdown-item' href='index.php?page=home&category=$categoryId'>$categoryName</a>";
                     
                     // Display subcategories
                     if (mysqli_num_rows($subResult) > 0) {
@@ -65,7 +65,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
                         while ($subRow = mysqli_fetch_assoc($subResult)) {
                             $subId = $subRow['category_id'];
                             $subName = htmlspecialchars($subRow['name']);
-                            echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$subId'>$subName</a></li>";
+                            echo "<li><a class='dropdown-item' href='index.php?page=home&category=$subId'>$subName</a></li>";
                         }
                         echo "</ul>";
                     }
@@ -80,7 +80,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
 
         <!-- Search Bar -->
         <form action="index.php" method="GET" class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
-          <input type="hidden" name="page" value="etusivu">
+          <input type="hidden" name="page" value="home">
           <input type="search" name="search" class="form-control" placeholder="Search Hello Kitty" aria-label="Search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
           <button class="btn btn-white ms-2" type="submit" aria-label="Search">
             <i class="fas fa-search"></i>
