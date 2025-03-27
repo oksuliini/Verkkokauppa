@@ -2,7 +2,6 @@
 session_start();
 require_once('../../config/config.php'); // Polku konfiguraatiotiedostoon
 
-
 // Tarkista, onko lomake lähetetty
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Varmista, että kaikki tarvittavat tiedot on lähetetty
