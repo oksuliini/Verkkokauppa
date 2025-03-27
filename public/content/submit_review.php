@@ -12,9 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rating = isset($_POST['rating']) ? intval($_POST['rating']) : 0;
     $comment = isset($_POST['comment']) ? trim($_POST['comment']) : '';
 
-    // Tarkista kelvollisuus
+    // Tarkista kelvollisuus ja rajoita kommentin pituus
     if ($productId <= 0 || $rating < 1 || $rating > 5 || empty($comment)) {
         die("Error: Invalid input.");
+    }
+
+    if (strlen($comment) > 200) {
+        die("Error: Review comment cannot exceed 200 characters.");
     }
 
     $link = getDbConnection();
@@ -37,4 +41,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: ../index.php");
     exit();
 }
+
 ?>

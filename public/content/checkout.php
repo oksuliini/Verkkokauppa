@@ -20,13 +20,13 @@ mysqli_stmt_fetch($stmt);
 mysqli_stmt_close($stmt);
 mysqli_close($link);
 
-// Tarkista, että ostoskori ei ole tyhjä
+// Check if the cart is empty
 if (empty($_SESSION['cart'])) {
     header("Location: index.php?page=cart");
     exit();
 }
 
-// Lasketaan ostoskorin kokonaissumma
+// Calculate the total price of the cart
 $total = 0;
 foreach ($_SESSION['cart'] as $productId => $item) {
     $total += $item['price'] * $item['quantity'];
@@ -34,18 +34,18 @@ foreach ($_SESSION['cart'] as $productId => $item) {
 ?>
 
 <div class="container mt-5 checkout-page">
-    <h1 class="text-center mb-4">Kassa</h1>
+    <h1 class="text-center mb-4">Checkout</h1>
 
-    <!-- Yhteenveto ostoskorista -->
-    <h2 class="mb-3">Ostoskorin sisältö</h2>
+    <!-- Cart summary -->
+    <h2 class="mb-3">Your Cart</h2>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="table-light">
                 <tr>
-                    <th>Tuote</th>
-                    <th>Hinta</th>
-                    <th>Määrä</th>
-                    <th>Yhteensä</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,54 +60,54 @@ foreach ($_SESSION['cart'] as $productId => $item) {
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3" class="text-end"><strong>Kokonaissumma:</strong></td>
+                    <td colspan="3" class="text-end"><strong>Total amount:</strong></td>
                     <td><strong><?php echo number_format($total, 2); ?> €</strong></td>
                 </tr>
             </tfoot>
         </table>
     </div>
 
-    <!-- Maksulomake -->
-    <h2 class="mt-4 mb-3">Maksutiedot</h2>
+    <!-- Payment form -->
+    <h2 class="mt-4 mb-3">Payment Details</h2>
     <form action="content/checkout_process.php" method="post" class="checkout-form">
         <div class="mb-3">
-            <label for="name" class="form-label">Nimi</label>
+            <label for="name" class="form-label">Full Name</label>
             <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($first_name);?>" required>
         </div>
         <div class="mb-3">
-            <label for="address" class="form-label">Osoite</label>
+            <label for="address" class="form-label">Address</label>
             <textarea class="form-control" id="address" name="address" rows="3" required><?php echo htmlspecialchars($address);?></textarea>
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label">Sähköposti</label>
+            <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($email);?>" required>
         </div>
         <div class="mb-3">
-            <label for="delivery_method" class="form-label">Toimitustapa</label>
+            <label for="delivery_method" class="form-label">Delivery Method</label>
             <select class="form-select" id="delivery_method" name="delivery_method" required>
-                <option value="pickup">Nouto</option>
-                <option value="shipping">Toimitus</option>
+                <option value="pickup">Pickup</option>
+                <option value="shipping">Shipping</option>
             </select>
         </div>
         <div class="mb-3">
-            <label for="payment_method" class="form-label">Maksutapa</label>
+            <label for="payment_method" class="form-label">Payment Method</label>
             <select class="form-select" id="payment_method" name="payment_method" required>
-                <option value="credit_card">Luottokortti</option>
+                <option value="credit_card">Credit Card</option>
                 <option value="paypal">PayPal</option>
-                <option value="bank_transfer">Tilisiirto</option>
+                <option value="bank_transfer">Bank Transfer</option>
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 mt-3">Viimeistele tilaus</button>
+        <button type="submit" class="btn btn-primary w-100 mt-3">Complete Order</button>
     </form>
 
     <div class="mt-3 text-center">
-        <a href="index.php?page=cart" class="btn btn-secondary">Palaa ostoskoriin</a>
+        <a href="index.php?page=cart" class="btn btn-secondary">Back to Cart</a>
     </div>
 </div>
 
 <style>
-    /* Estetään sivun elementit näyttämästä liian tiiviiltä */
+    /* Prevent the page elements from looking too crowded */
     .checkout-page {
         max-width: 900px;
         margin: 0 auto;
@@ -122,7 +122,7 @@ foreach ($_SESSION['cart'] as $productId => $item) {
         font-weight: bold;
     }
 
-    /* Lisää miellyttävämpää väriä ja pyöristettyjä kulmia */
+    /* Add some pleasant colors and rounded corners */
     .btn-primary {
         background-color: #FF66B2;
         border-color: #FF66B2;
@@ -152,7 +152,7 @@ foreach ($_SESSION['cart'] as $productId => $item) {
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
-    /* Lisätään hieman tilaa ympärille */
+    /* Add some space around the form */
     .checkout-form {
         margin-top: 30px;
     }

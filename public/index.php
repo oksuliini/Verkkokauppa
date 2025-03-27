@@ -1,13 +1,14 @@
 <?php
 session_start();
 require_once('../config/config.php');  // Include database connection configuration
+
 // Define available pages
 $pages = array(
     "etusivu", "cart", "checkout", "profile", "login", "product", "register", "update_profile",
     "admin_profile", "add_product", "edit_product", "order_details", "change_password_form"
 );
 
-// Default page to display is 'etusivu'
+// Default page to display is 'home'
 $page = "etusivu";
 
 // Check if 'page' is set in the URL and is a valid page
@@ -26,17 +27,17 @@ if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
 
 ?>
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello Kitty Verkkokauppa</title>
+    <title>Hello Kitty Online Store</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<!-- Custom Styles -->
-<link rel="stylesheet" href="styles.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -52,7 +53,7 @@ if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
         if (file_exists($contentFile)) {
             include($contentFile);
         } else {
-            echo "<p>Sivua ei löytynyt.</p>";  // If the page doesn't exist, show an error message
+            echo "<p>Page not found.</p>";  // If the page doesn't exist, show an error message
         }
         ?>
     </div>

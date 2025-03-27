@@ -303,27 +303,40 @@ if ($row = mysqli_fetch_assoc($result)) {
             <?php endif; ?>
         </div>
     </div>
-
+<?php if (isset($_SESSION['SESS_ROLE']) && $_SESSION['SESS_ROLE'] === 'admin') {
+        echo "<a href='index.php?page=edit_product&id=" . $productId . "' class='btn btn-warning mt-2'>Edit Product</a>";
+    }?>
     <!-- Arvostelu ja arvostelulomake -->
     <?php if (isset($_SESSION['SESS_USER_ID'])): ?>
-        <h3 class="text-center">Leave a Review</h3>
-        <div class="review-form-container">
-            <form action='content/submit_review.php' method='POST'>
-                <input type='hidden' name='product_id' value='<?= $productId ?>'>
-                <label for='rating'>Rating:</label>
-                <div class='star-rating'>
-                    <input type='radio' name='rating' value='1' id='star1' required><label for='star1'>&#9733;</label>
-                    <input type='radio' name='rating' value='2' id='star2'><label for='star2'>&#9733;</label>
-                    <input type='radio' name='rating' value='3' id='star3'><label for='star3'>&#9733;</label>
-                    <input type='radio' name='rating' value='4' id='star4'><label for='star4'>&#9733;</label>
-                    <input type='radio' name='rating' value='5' id='star5' ><label for='star5'>&#9733;</label>
-                </div>
-                <label for='comment'>Your Review:</label>
-                <textarea name='comment' id='comment' class='review-textarea' required></textarea>
-                <button type='submit' class='btn submit-review-btn'>Submit Review</button>
-            </form>
-        </div>
-    <?php endif; ?>
+    <h3 class="text-center">Leave a Review</h3>
+    <div class="review-form-container">
+        <form action='content/submit_review.php' method='POST' id="reviewForm">
+            <input type='hidden' name='product_id' value='<?= $productId ?>'>
+            <label for='rating'>Rating:</label>
+            <div class='star-rating'>
+                <input type='radio' name='rating' value='1' id='star1'><label for='star1'>&#9733;</label>
+                <input type='radio' name='rating' value='2' id='star2'><label for='star2'>&#9733;</label>
+                <input type='radio' name='rating' value='3' id='star3'><label for='star3'>&#9733;</label>
+                <input type='radio' name='rating' value='4' id='star4'><label for='star4'>&#9733;</label>
+                <input type='radio' name='rating' value='5' id='star5'><label for='star5'>&#9733;</label>
+            </div>
+            <label for='comment'>Your Review:</label>
+            <textarea name='comment' id='comment' class='review-textarea' placeholder="The character limit is 200" required></textarea>
+            <button type='submit' class='btn submit-review-btn'>Submit Review</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("reviewForm").addEventListener("submit", function(event) {
+            const ratingSelected = document.querySelector('input[name="rating"]:checked');
+            if (!ratingSelected) {
+                alert("Please select a star rating before submitting your review.");
+                event.preventDefault(); // Estetään lomakkeen lähettäminen
+            }
+        });
+    </script>
+<?php endif; ?>
+
 
     <!-- Arvostelut -->
     <?php

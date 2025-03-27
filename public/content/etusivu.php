@@ -89,14 +89,14 @@ if (!empty($categoryList)) {
 }
 ?>
 
-<h1>Tervetuloa Hello Kitty -kauppaamme</h1>
+<h1>Welcome to our Hello Kitty Store</h1>
 
 <?php if (!empty($searchQuery)): ?>
-    <h2>Hakutulokset haulle "<?php echo htmlspecialchars($searchQuery); ?>"</h2>
+    <h2>Search results for "<?php echo htmlspecialchars($searchQuery); ?>"</h2>
 <?php elseif ($categoryId > 0): ?>
-    <h2>Kategoria: <?php echo htmlspecialchars(getCategoryName($categoryId, $link)); ?></h2>
+    <h2>Category: <?php echo htmlspecialchars(getCategoryName($categoryId, $link)); ?></h2>
 <?php else: ?>
-    <h2>Kaikki tuotteemme</h2><br><br><br>
+    <h2>All our products</h2><br><br><br>
 <?php endif; ?>
 
 <div class="products-container">
@@ -113,25 +113,25 @@ if (!empty($categoryList)) {
             <div class='product-card border p-3' style='width: 280px;'>
                 <img src='$imageUrl' alt='$name' class='product-image img-fluid' style='height: 200px; object-fit: cover;'>
                 <h2 class='product-name mt-2'>$name</h2>
-                <p class='product-price'>Hinta: $price €</p>
-                <p class='product-stock'>Varastossa: $stock_quantity kpl</p>
+                <p class='product-price'>Price: $price €</p>
+                <p class='product-stock'>In stock: $stock_quantity units</p>
 
-                <!-- Lisää ostoskoriin lomake -->
+                <!-- Add to cart form -->
                 <form action='content/cart_add.php' method='post' onsubmit='return showAddToCartAlert(\"$name\", this.quantity.value)'>
                     <input type='hidden' name='product_id' value='$productId'>
                     <input type='hidden' name='name' value='$name'>
                     <input type='hidden' name='price' value='{$row['price']}'>
-                    <label for='quantity_$productId'>Määrä:</label>
+                    <label for='quantity_$productId'>Quantity:</label>
                     <input type='number' id='quantity_$productId' name='quantity' value='1' min='1' max='$stock_quantity' class='form-control d-inline' style='width: 70px;'>
-                    <button type='submit' class='btn btn-hotpink mt-2'>Lisää ostoskoriin</button>
+                    <button type='submit' class='btn btn-hotpink mt-2'>Add to cart</button>
                 </form>
 
-                <!-- Katso lisätietoja -painike -->
-                <a href='index.php?page=product&id=$productId' class='btn btn-secondary mt-2'>Katso lisätietoja</a>
+                <!-- View details button -->
+                <a href='index.php?page=product&id=$productId' class='btn btn-secondary mt-2'>View details</a>
             </div>";
         }
     } else {
-        echo "<p>Ei löytynyt tuotteita.</p>";
+        echo "<p>No products found.</p>";
     }
     ?>
 </div>
