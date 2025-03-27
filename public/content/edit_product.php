@@ -73,7 +73,7 @@ mysqli_close($link);
             <select class="form-control" name="category_id" required>
                 <?php while ($category = mysqli_fetch_assoc($categoryResult)) { ?>
                     <option value="<?php echo $category['category_id']; ?>" 
-                        <?php echo ($category['category_id'] == $currentCategoryId) ? 'selected' : ''; ?> >
+                        <?php echo ($category['category_id'] == $currentCategoryId) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($category['name']); ?>
                     </option>
                 <?php } ?>
@@ -89,12 +89,5 @@ mysqli_close($link);
         
         <button type="submit" class="btn btn-hotpink mt-2">Update Product</button>
         <a href="index.php?page=etusivu" class="btn btn-secondary">Cancel</a>
-                </form>
-        <!-- Delete Button -->
-        <form action="content/delete_product.php" method="POST"
-      onsubmit="return confirm('Are you sure you want to delete this product?');">
-    <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
-    <button type="submit" class="btn btn-danger mt-3">Delete Product</button>
-</form>
+    </form>
 </div>
-
