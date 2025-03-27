@@ -36,41 +36,53 @@ mysqli_close($link);
 <div class="container mt-5 profile-page">
     <h1 class="text-center mb-4">Profiilisi</h1>
 
-    <!-- Profiilin tiedot -->
-    <form id="profileForm" action="content/update_profile.php" method="post" class="profile-form">
-        <div class="profile-info">
-            <div class="form-group">
-                <label for="first_name" class="form-label">Etunimi</label>
-                <p id="first_name_display"><?php echo htmlspecialchars($first_name); ?></p>
-                <input type="text" id="first_name_input" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" class="form-control" style="display: none;">
-            </div>
-            <div class="form-group">
-                <label for="last_name" class="form-label">Sukunimi</label>
-                <p id="last_name_display"><?php echo htmlspecialchars($last_name); ?></p>
-                <input type="text" id="last_name_input" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" class="form-control" style="display: none;">
-            </div>
-            <div class="form-group">
-                <label for="email" class="form-label">Sähköposti</label>
-                <p id="email_display"><?php echo htmlspecialchars($email); ?></p>
-                <input type="email" id="email_input" name="email" value="<?php echo htmlspecialchars($email); ?>" class="form-control" style="display: none;">
-            </div>
-            <div class="form-group">
-                <label for="phone" class="form-label">Puhelinnumero</label>
-                <p id="phone_display"><?php echo htmlspecialchars($phone); ?></p>
-                <input type="text" id="phone_input" name="phone" value="<?php echo htmlspecialchars($phone); ?>" class="form-control" style="display: none;">
-            </div>
-            <div class="form-group">
-                <label for="address" class="form-label">Osoite</label>
-                <p id="address_display"><?php echo nl2br(htmlspecialchars($address)); ?></p>
-                <textarea id="address_input" name="address" class="form-control" style="display: none;"><?php echo htmlspecialchars($address); ?></textarea>
-            </div>
-        </div>
+    <!-- Profiilin tiedot kortissa -->
+    <div class="card profile-card">
+    <div class="card-body">
+        <h2 class="card-title text-center">Käyttäjätiedot</h2>
+        <form id="profileForm" action="content/update_profile.php" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="first_name" class="form-label">Etunimi</label>
+                        <p id="first_name_display"><?php echo htmlspecialchars($first_name); ?></p>
+                        <input type="text" id="first_name_input" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" class="form-control" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name" class="form-label">Sukunimi</label>
+                        <p id="last_name_display"><?php echo htmlspecialchars($last_name); ?></p>
+                        <input type="text" id="last_name_input" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" class="form-control" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Sähköposti</label>
+                        <p id="email_display"><?php echo htmlspecialchars($email); ?></p>
+                        <input type="email" id="email_input" name="email" value="<?php echo htmlspecialchars($email); ?>" class="form-control" style="display: none;">
+                    </div>
+                </div>
 
-        <div class="form-actions">
-            <button type="button" class="btn btn-primary" id="editButton" onclick="enableEdit()">Muokkaa profiilia</button>
-            <button type="submit" class="btn btn-success" id="saveButton" style="display: none;">Tallenna muutokset</button>
-        </div>
-    </form>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Puhelinnumero</label>
+                        <p id="phone_display"><?php echo htmlspecialchars($phone); ?></p>
+                        <input type="text" id="phone_input" name="phone" value="<?php echo htmlspecialchars($phone); ?>" class="form-control" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="form-label">Osoite</label>
+                        <p id="address_display"><?php echo nl2br(htmlspecialchars($address)); ?></p>
+                        <textarea id="address_input" name="address" class="form-control" style="display: none;"><?php echo htmlspecialchars($address); ?></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button type="button" class="btn btn-primary" id="editButton" onclick="enableEdit()">Muokkaa profiilia</button>
+                <button type="submit" class="btn btn-success" id="saveButton" style="display: none;">Tallenna muutokset</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 
     <!-- Linkki salasanan vaihtoon -->
     <div class="password-change">
@@ -213,5 +225,17 @@ function enableEdit() {
     .btn-danger {
         background-color: #dc3545;
         border-color: #dc3545;
+    }
+    .profile-card {
+        background: #ffccd5;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        
+    }
+
+    .profile-info p {
+        font-size: 16px;
     }
 </style>
