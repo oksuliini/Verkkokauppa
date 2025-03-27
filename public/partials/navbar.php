@@ -28,66 +28,89 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
       </ul>
     </div>
 
+    <!-- Mobile Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
     <!-- Search Bar and Categories in the Center -->
-    <div class="d-flex align-items-center" style="flex-grow: 1; justify-content: center;">
-      <!-- Categories Dropdown -->
-      <ul class="navbar-nav ms-2">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Categories
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <?php
-            $link = getDbConnection(); // Connect to the database
-            $categoryQuery = "SELECT * FROM categories"; // Get all categories
-            $categoryResult = mysqli_query($link, $categoryQuery);
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="d-flex align-items-center" style="flex-grow: 1; justify-content: center;">
+        <!-- Categories Dropdown -->
+        <ul class="navbar-nav ms-2">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Kategoriat
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <?php
+                $link = getDbConnection();
+                $categoryQuery = "SELECT * FROM categories WHERE parent_id IS NULL"; 
+                $categoryResult = mysqli_query($link, $categoryQuery);
 
-            // Loop through categories and create menu items
-            while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
-                $categoryId = $categoryRow['category_id'];
-                $categoryName = htmlspecialchars($categoryRow['name']);
-                echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$categoryId'>$categoryName</a></li>";
-            }
+                while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
+                    $categoryId = $categoryRow['category_id'];
+                    $categoryName = htmlspecialchars($categoryRow['name']);
 
-            mysqli_close($link); // Close the connection
-            ?>
-          </ul>
-        </li>
-      </ul>
+                    // Fetch subcategories
+                    $subQuery = "SELECT * FROM categories WHERE parent_id = $categoryId";
+                    $subResult = mysqli_query($link, $subQuery);
 
-      <!-- Search Bar -->
-      <form action="index.php" method="GET" class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
-        <input type="hidden" name="page" value="etusivu"> <!-- Ensures search stays on the front page -->
-        <input type="search" name="search" class="form-control" placeholder="Search Hello Kitty" aria-label="Search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-        <button class="btn btn-white ms-2" type="submit" aria-label="Search">
+                    echo "<li class='dropdown-submenu'>";  
+                    echo "<a class='dropdown-item' href='index.php?page=etusivu&category=$categoryId'>$categoryName</a>";
+                    
+                    // Display subcategories
+                    if (mysqli_num_rows($subResult) > 0) {
+                        echo "<ul class='dropdown-menu subcategories'>";
+                        while ($subRow = mysqli_fetch_assoc($subResult)) {
+                            $subId = $subRow['category_id'];
+                            $subName = htmlspecialchars($subRow['name']);
+                            echo "<li><a class='dropdown-item' href='index.php?page=etusivu&category=$subId'>$subName</a></li>";
+                        }
+                        echo "</ul>";
+                    }
+
+                    echo "</li>";
+                }
+                mysqli_close($link); // Close the connection
+              ?>
+            </ul>
+          </li>
+        </ul>
+
+        <!-- Search Bar -->
+        <form action="index.php" method="GET" class="d-flex mx-2" role="search" style="width: 60%; max-width: 500px;">
+          <input type="hidden" name="page" value="etusivu">
+          <input type="search" name="search" class="form-control" placeholder="Search Hello Kitty" aria-label="Search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+          <button class="btn btn-white ms-2" type="submit" aria-label="Search">
             <i class="fas fa-search"></i>
-        </button>
-      </form>
-    </div>
+          </button>
+        </form>
+      </div>
 
-    <!-- Cart and Profile Icons on the Right -->
-    <div class="d-flex align-items-center">
-      <ul class="navbar-nav">
-        <!-- Cart Icon -->
-        <li class="nav-item">
-          <a class="nav-link text-white" href="index.php?page=cart" aria-label="Shopping Cart">
-            <i class="fas fa-shopping-cart"></i>
-          </a>
-        </li>
+      <!-- Cart and Profile Icons on the Right -->
+      <div class="d-flex align-items-center">
+        <ul class="navbar-nav">
+          <!-- Cart Icon -->
+          <li class="nav-item">
+            <a class="nav-link text-white" href="index.php?page=cart" aria-label="Shopping Cart">
+              <i class="fas fa-shopping-cart"></i>
+            </a>
+          </li>
 
-        <!-- Profile Icon -->
-        <li class="nav-item">
-          <a href="<?php echo htmlspecialchars($profileLink); ?>" class="btn btn-white" aria-label="User Profile">
-            <i class="fas fa-user-circle" style="font-size: 1.5rem; color: #ff6f91;"></i>
-          </a>
-        </li>
-      </ul>
+          <!-- Profile Icon -->
+          <li class="nav-item">
+            <a href="<?php echo htmlspecialchars($profileLink); ?>" class="btn btn-white" aria-label="User Profile">
+              <i class="fas fa-user-circle" style="font-size: 1.5rem; color: #ff6f91;"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>
-
 <style>
-/* General Navbar Style */
+/* General Styles */
 .navbar {
   background-color: #ffccd5;
   padding: 10px 20px;
@@ -95,8 +118,7 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
   font-family: 'Comic Sans MS', cursive;
 }
 
-/* Logo */
-.navbar-brand img {
+.navbar .navbar-brand img {
   height: 40px;
 }
 
@@ -139,13 +161,62 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
   background-color: #ffe4e1;
   border-radius: 5px;
   border: none;
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  min-width: 180px;
+  padding: 5px 0;
+}
+
+/* Show dropdown menu when hovering on the main category */
+.navbar .dropdown:hover > .dropdown-menu {
+  display: block;
+}
+
+/* Submenu Layout */
+.navbar .dropdown-submenu {
+  position: relative;
+}
+
+/* Submenu hidden by default */
+.navbar .dropdown-submenu .dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 100%; 
+  top: 0;
+  min-width: 180px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+
+/* Display subcategories when hovering */
+.navbar .dropdown:hover > .dropdown-menu,
+.navbar .dropdown-submenu:hover > .dropdown-menu {
+  display: block !important;
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.subcategories {
+  background-color: #ffe4e1;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.subcategories li {
+  list-style: none;
+  padding: 5px 0;
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .container-fluid {
-    flex-wrap: wrap;
-    justify-content: center;
+  .navbar .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
   }
 
   .navbar .form-control {
@@ -153,13 +224,25 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
     margin: 10px auto;
   }
 
-  .navbar-nav {
-    flex-direction: column;
-    align-items: center;
-  }
-
   .navbar .nav-link {
     margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .navbar-collapse {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .navbar-toggler {
+    display: block; /* Show the hamburger icon */
+  }
+
+  /* Adjust dropdown behavior on mobile */
+  .navbar .dropdown-menu {
+    position: static; /* Ensure dropdown menu aligns correctly on small screens */
+    background-color: #ffe4e1;
+    border-radius: 5px;
   }
 }
 </style>
