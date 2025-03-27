@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($_GET['order_id'])) {
-    header("Location: index.php?page=profile"); 
+    header("Location: index.php?page=profile");
     exit();
 }
 
@@ -49,22 +49,88 @@ mysqli_close($link);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Details</title>
+    <style>
+      
+        .order-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #ff4da6; /* Pinkki otsikko */
+        }
+
+        .order-info {
+            text-align: left;
+            background: #fff0f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .order-info p {
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ff99cc;
+        }
+
+        
+        td {
+            padding: 10px;
+            background: #fff;
+        }
+
+        tr:hover {
+            background: #ffe6f2;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #ff4da6;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #ff3385;
+        }
+    </style>
 </head>
 <body>
+
+<div class="order-container">
     <h1>Order Details</h1>
-    <p><strong>Order ID:</strong> <?php echo $order['order_id']; ?></p>
-    <p><strong>Total Price:</strong> <?php echo number_format($order['total_price'], 2); ?> €</p>
-    <p><strong>Status:</strong> <?php echo ucfirst($order['status']); ?></p>
-    <p><strong>Delivery Method:</strong> <?php echo ucfirst($order['delivery_method']); ?></p>
-    <p><strong>Order Date:</strong> <?php echo $order['created_at']; ?></p>
-    <p><strong>Customer:</strong> <?php echo htmlspecialchars($order['first_name'] . " " . $order['last_name']); ?></p>
-    <p><strong>Email:</strong> <?php echo htmlspecialchars($order['email']); ?></p>
+    <div class="order-info">
+        <p><strong>Order ID:</strong> <?php echo $order['order_id']; ?></p>
+        <p><strong>Total Price:</strong> <?php echo number_format($order['total_price'], 2); ?> €</p>
+        <p><strong>Status:</strong> <?php echo ucfirst($order['status']); ?></p>
+        <p><strong>Delivery Method:</strong> <?php echo ucfirst($order['delivery_method']); ?></p>
+        <p><strong>Order Date:</strong> <?php echo $order['created_at']; ?></p>
+        <p><strong>Customer:</strong> <?php echo htmlspecialchars($order['first_name'] . " " . $order['last_name']); ?></p>
+        <p><strong>Email:</strong> <?php echo htmlspecialchars($order['email']); ?></p>
+    </div>
 
     <h2>Ordered Products</h2>
     <?php if (empty($orderItems)): ?>
         <p>No products found.</p>
     <?php else: ?>
-        <table border="1">
+        <table>
             <thead>
                 <tr>
                     <th>Product ID</th>
@@ -86,7 +152,8 @@ mysqli_close($link);
         </table>
     <?php endif; ?>
 
-    <br>
-    <a href="index.php?page=profile">Back to Profile</a>
+    <a href="index.php?page=profile" class="btn">Back to Profile</a>
+</div>
+
 </body>
 </html>
