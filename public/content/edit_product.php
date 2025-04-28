@@ -59,7 +59,7 @@ mysqli_close($link);
         </div>
         
         <div class="mb-3">
-            <label class="form-label">Price (â‚¬)</label>
+            <label class="form-label">Price (€)</label>
             <input type="number" class="form-control" name="price" step="0.01" value="<?php echo $row['price']; ?>" required>
         </div>
         

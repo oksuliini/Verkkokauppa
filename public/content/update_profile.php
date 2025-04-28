@@ -8,6 +8,8 @@ if (!isset($_SESSION['SESS_USER_ID'])) {
 }
 
 $user_id = $_SESSION['SESS_USER_ID'];
+$role = $_SESSION['SESS_ROLE']; // Haetaan rooli
+
 $link = getDbConnection();
 
 $first_name = trim($_POST['first_name']);
@@ -24,7 +26,11 @@ mysqli_stmt_execute($stmt);
 mysqli_stmt_store_result($stmt);
 if (mysqli_stmt_num_rows($stmt) > 0) {
     $_SESSION['ERROR_MESSAGE'] = "This email is already in use.";
-    header("Location: ../index.php?page=profile");
+    if ($role === 'admin') {
+        header("Location: ../index.php?page=admin_profile");
+    } else {
+        header("Location: ../index.php?page=profile");
+    }
     exit();
 }
 mysqli_stmt_close($stmt);
@@ -44,6 +50,10 @@ if ($result) {
 mysqli_stmt_close($stmt);
 mysqli_close($link);
 
-// Palataan profiilisivulle
-header("Location: ../index.php?page=profile");
+// Palataan profiilisivulle roolin mukaan
+if ($role === 'admin') {
+    header("Location: ../index.php?page=admin_profile");
+} else {
+    header("Location: ../index.php?page=profile");
+}
 exit();

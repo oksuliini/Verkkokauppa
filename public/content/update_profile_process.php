@@ -10,12 +10,12 @@ if (!isset($_SESSION['SESS_USER_ID'])) {
 $user_id = $_SESSION['SESS_USER_ID'];
 $link = getDbConnection();
 
-// Fetch the current hashed password from the database
-$query = "SELECT password FROM users WHERE user_id = ?";
+// Fetch the current hashed password and role from the database
+$query = "SELECT password, role FROM users WHERE user_id = ?";
 $stmt = mysqli_prepare($link, $query);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
-mysqli_stmt_bind_result($stmt, $hashed_password);
+mysqli_stmt_bind_result($stmt, $hashed_password, $role);
 mysqli_stmt_fetch($stmt);
 mysqli_stmt_close($stmt);
 
@@ -51,11 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     mysqli_close($link);
 
-    // Redirect back to the update_profile page without including messages in the URL
-    header("Location: ../index.php?page=update_profile");
+    // Redirect based on role
+    if ($role === 'admin') {
+        header("Location: ../index.php?page=admin_profile");
+    } else {
+        header("Location: ../index.php?page=profile");
+    }
     exit();
 } else {
-    // If the form is not submitted properly, redirect to the update form
     header("Location: ../index.php?page=update_profile");
     exit();
 }

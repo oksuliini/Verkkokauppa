@@ -7,6 +7,7 @@ $errflag = false;
 
 // Connect to MySQL server
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_DATABASE);
+
 if (!$link) {
     die('Failed to connect to server: ' . mysqli_connect_error());
 }
@@ -38,6 +39,7 @@ if ($errflag) {
     exit();
 }
 
+
 $qry = "SELECT * FROM users WHERE username='$username'";
 $result = mysqli_query($link, $qry);
 
@@ -60,6 +62,7 @@ if ($result && mysqli_num_rows($result) == 1) {
         } else {
             header("Location: ../index.php?page=profile");
         }
+
         exit();
     } else {
         // Incorrect password

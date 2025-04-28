@@ -43,8 +43,13 @@ if (isset($_SESSION['SESS_USER_ID'])) { // If user is logged in
               Categories
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+
+
+
               <?php
                 $link = getDbConnection();
+
                 $categoryQuery = "SELECT * FROM categories WHERE parent_id IS NULL"; 
                 $categoryResult = mysqli_query($link, $categoryQuery);
 

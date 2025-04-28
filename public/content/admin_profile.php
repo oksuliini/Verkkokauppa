@@ -3,6 +3,8 @@ if ($_SESSION['SESS_ROLE'] !== 'admin') {
     header("Location: ../errors/403.php");
     exit();
 }
+
+
 $user_id = $_SESSION['SESS_USER_ID'];
 $link = getDbConnection();
 
@@ -30,72 +32,106 @@ mysqli_stmt_close($stmt);
 mysqli_close($link);
 ?>
 
-<h1>User Profile</h1>
+<div class="container mt-5 profile-page">
+    <h1 class="text-center mb-4">Your Profile</h1>
 
-<!-- Profiilin tiedot -->
-<form id="profileForm" action="content/update_profile.php" method="post">
-    <p><strong>First Name:</strong> <span id="first_name_display"><?php echo htmlspecialchars($first_name); ?></span></p>
-    <input type="text" id="first_name_input" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" style="display: none;">
+    <!-- Profile Information Card -->
+    <div class="card profile-card">
+        <div class="card-body">
+            <h2 class="card-title text-center">User Information</h2>
+            <form id="profileForm" action="content/update_profile.php" method="post">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <p id="first_name_display"><?php echo htmlspecialchars($first_name); ?></p>
+                            <input type="text" id="first_name_input" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" class="form-control" style="display: none;">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <p id="last_name_display"><?php echo htmlspecialchars($last_name); ?></p>
+                            <input type="text" id="last_name_input" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" class="form-control" style="display: none;">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <p id="email_display"><?php echo htmlspecialchars($email); ?></p>
+                            <input type="email" id="email_input" name="email" value="<?php echo htmlspecialchars($email); ?>" class="form-control" style="display: none;">
+                        </div>
+                    </div>
 
-    <p><strong>Last Name:</strong> <span id="last_name_display"><?php echo htmlspecialchars($last_name); ?></span></p>
-    <input type="text" id="last_name_input" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" style="display: none;">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <p id="phone_display"><?php echo htmlspecialchars($phone); ?></p>
+                            <input type="text" id="phone_input" name="phone" value="<?php echo htmlspecialchars($phone); ?>" class="form-control" style="display: none;">
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="form-label">Address</label>
+                            <p id="address_display"><?php echo nl2br(htmlspecialchars($address)); ?></p>
+                            <textarea id="address_input" name="address" class="form-control" style="display: none;"><?php echo htmlspecialchars($address); ?></textarea>
+                        </div>
+                    </div>
+                </div>
 
-    <p><strong>Email:</strong> <span id="email_display"><?php echo htmlspecialchars($email); ?></span></p>
-    <input type="email" id="email_input" name="email" value="<?php echo htmlspecialchars($email); ?>" style="display: none;">
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-primary" id="editButton" onclick="enableEdit()">Edit Profile</button>
+                    <button type="submit" class="btn btn-hotpink mt-2" id="saveButton" style="display: none;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <p><strong>Phone:</strong> <span id="phone_display"><?php echo htmlspecialchars($phone); ?></span></p>
-    <input type="text" id="phone_input" name="phone" value="<?php echo htmlspecialchars($phone); ?>" style="display: none;">
+    <!-- Change Password Link -->
+    <div class="password-change">
+        <h2>Change Password</h2>
+        <p>If you want to change your password, click the button below:</p>
+        <a href="index.php?page=change_password_form" class="btn btn-secondary mt-2">Change Password</a>
+    </div>
 
-    <p><strong>Address:</strong> <span id="address_display"><?php echo nl2br(htmlspecialchars($address)); ?></span></p>
-    <textarea id="address_input" name="address" style="display: none;"><?php echo htmlspecialchars($address); ?></textarea>
+    <!-- Order History -->
+    <div class="order-history">
+        <h2>Order History</h2>
+        <?php if (empty($orders)): ?>
+            <p>No order history.</p>
+        <?php else: ?>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Delivery Method</th>
+                        <th>Order Date</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($orders as $order): ?>
+                        <tr>
+                            <td><?php echo $order['order_id']; ?></td>
+                            <td><?php echo number_format($order['total_price'], 2); ?> €</td>
+                            <td><?php echo ucfirst($order['status']); ?></td>
+                            <td><?php echo ucfirst($order['delivery_method']); ?></td>
+                            <td><?php echo $order['created_at']; ?></td>
+                            <td><a href="index.php?page=order_details&order_id=<?php echo $order['order_id']; ?>" class="btn btn-info btn-sm">View</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
 
-    <button type="button" class="btn btn-hotpink mt-2" id="editButton" onclick="enableEdit()">Edit Profile</button>
-    <button type="submit" class="btn btn-hotpink mt-2" id="saveButton" style="display: none;">Save Changes</button>
-</form>
-
-<!-- Linkki salasanan vaihtoon -->
-<h2>Change Password</h2>
-<p>If you want to change your password, click the button below:</p>
-<a href="index.php?page=change_password_form" class="btn btn-hotpink mt-2">Change Password</a>
-<form action="index.php?page=add_product" method="post">
+    <form action="index.php?page=add_product" method="post">
         <button type="submit" class="btn btn-hotpink mt-2">Add Products</button>
-</form>
+    </form><br>
 
-<!-- Tilaushistoria -->
-<h2>Order History</h2>
-<?php if (empty($orders)): ?>
-    <p>No orders found.</p>
-<?php else: ?>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Total Price</th>
-                <th>Status</th>
-                <th>Delivery Method</th>
-                <th>Order Date</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($orders as $order): ?>
-                <tr>
-                    <td><?php echo $order['order_id']; ?></td>
-                    <td><?php echo number_format($order['total_price'], 2); ?> €</td>
-                    <td><?php echo ucfirst($order['status']); ?></td>
-                    <td><?php echo ucfirst($order['delivery_method']); ?></td>
-                    <td><?php echo $order['created_at']; ?></td>
-                    <td><a href="index.php?page=order_details&order_id=<?php echo $order['order_id']; ?>">View</a></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-<?php endif; ?>
-<!-- Logout -->
-<br>
-<form action="content/logout.php" method="post">
-    <button type="submit" class="btn btn-secondary">Logout</button>
-</form>
+    <!-- Logout -->
+    <div class="logout">
+        <form action="content/logout.php" method="post">
+            <button type="submit" class="btn btn-danger">Log Out</button>
+        </form>
+    </div>
+</div>
 
 <!-- JavaScript muokkauksen mahdollistamiseen -->
 <script>
@@ -120,10 +156,87 @@ function enableEdit() {
 }
 </script>
 
+<style>
+    /* Yleinen asettelu */
+    .profile-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px;
+    }
 
-    
+    .form-group {
+        margin-bottom: 15px;
+    }
 
-    
-    
-    
+    .form-label {
+        font-weight: bold;
+        color: #555;
+    }
 
+    .profile-info p {
+        font-size: 16px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 8px;
+    }
+
+    .form-actions button {
+        margin-right: 10px;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .btn {
+        font-size: 16px;
+    }
+
+    .password-change, .order-history {
+        margin-top: 30px;
+    }
+
+    /* Painikkeiden tyylit */
+    .btn-primary {
+        background-color: #FF66B2;
+        border-color: #FF66B2;
+    }
+
+    .btn-primary:hover {
+        background-color: #FF3385;
+        border-color: #FF3385;
+    }
+
+    .btn-warning {
+        background-color: #FFC107;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background-color: #FFA000;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    .profile-card {
+        background: #ffccd5;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        
+    }
+
+    .profile-info p {
+        font-size: 16px;
+    }
+</style>
