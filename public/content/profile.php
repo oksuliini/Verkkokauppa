@@ -1,15 +1,14 @@
 <?php
-// Tarkista, että käyttäjä on kirjautunut
+// Check if user is logged in
 if (!isset($_SESSION['SESS_USER_ID'])) {
     header("Location: index.php?page=login"); 
     exit();
 }
 
-
 $user_id = $_SESSION['SESS_USER_ID'];
 $link = getDbConnection();
 
-// Hae käyttäjän tiedot
+// Fetch user data
 $query = "SELECT first_name, last_name, email, phone, address FROM users WHERE user_id = ?";
 $stmt = mysqli_prepare($link, $query);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
@@ -18,7 +17,7 @@ mysqli_stmt_bind_result($stmt, $first_name, $last_name, $email, $phone, $address
 mysqli_stmt_fetch($stmt);
 mysqli_stmt_close($stmt);
 
-// Hae käyttäjän tilaushistoria
+// Fetch user order history
 $ordersQuery = "SELECT order_id, total_price, status, delivery_method, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC";
 $stmt = mysqli_prepare($link, $ordersQuery);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
@@ -34,27 +33,27 @@ mysqli_close($link);
 ?>
 
 <div class="container mt-5 profile-page">
-    <h1 class="text-center mb-4">Profiilisi</h1>
+    <h1 class="text-center mb-4">Your Profile</h1>
 
-    <!-- Profiilin tiedot kortissa -->
+    <!-- Profile information card -->
     <div class="card profile-card">
     <div class="card-body">
-        <h2 class="card-title text-center">Käyttäjätiedot</h2>
+        <h2 class="card-title text-center">User Information</h2>
         <form id="profileForm" action="content/update_profile.php" method="post">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="first_name" class="form-label">Etunimi</label>
+                        <label for="first_name" class="form-label">First Name</label>
                         <p id="first_name_display"><?php echo htmlspecialchars($first_name); ?></p>
                         <input type="text" id="first_name_input" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" class="form-control" style="display: none;">
                     </div>
                     <div class="form-group">
-                        <label for="last_name" class="form-label">Sukunimi</label>
+                        <label for="last_name" class="form-label">Last Name</label>
                         <p id="last_name_display"><?php echo htmlspecialchars($last_name); ?></p>
                         <input type="text" id="last_name_input" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" class="form-control" style="display: none;">
                     </div>
                     <div class="form-group">
-                        <label for="email" class="form-label">Sähköposti</label>
+                        <label for="email" class="form-label">Email</label>
                         <p id="email_display"><?php echo htmlspecialchars($email); ?></p>
                         <input type="email" id="email_input" name="email" value="<?php echo htmlspecialchars($email); ?>" class="form-control" style="display: none;">
                     </div>
@@ -62,12 +61,12 @@ mysqli_close($link);
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="phone" class="form-label">Puhelinnumero</label>
+                        <label for="phone" class="form-label">Phone Number</label>
                         <p id="phone_display"><?php echo htmlspecialchars($phone); ?></p>
                         <input type="text" id="phone_input" name="phone" value="<?php echo htmlspecialchars($phone); ?>" class="form-control" style="display: none;">
                     </div>
                     <div class="form-group">
-                        <label for="address" class="form-label">Osoite</label>
+                        <label for="address" class="form-label">Address</label>
                         <p id="address_display"><?php echo nl2br(htmlspecialchars($address)); ?></p>
                         <textarea id="address_input" name="address" class="form-control" style="display: none;"><?php echo htmlspecialchars($address); ?></textarea>
                     </div>
@@ -75,37 +74,35 @@ mysqli_close($link);
             </div>
 
             <div class="text-center mt-3">
-                <button type="button" class="btn btn-primary" id="editButton" onclick="enableEdit()">Muokkaa profiilia</button>
-                <button type="submit" class="btn btn-success" id="saveButton" style="display: none;">Tallenna muutokset</button>
+                <button type="button" class="btn btn-primary" id="editButton" onclick="enableEdit()">Edit Profile</button>
+                <button type="submit" class="btn btn-hotpink mt-2" id="saveButton" style="display: none;">Save Changes</button>
             </div>
         </form>
     </div>
 </div>
 
-
-
-    <!-- Linkki salasanan vaihtoon -->
+    <!-- Change password link -->
     <div class="password-change">
-        <h2>Vaihda salasana</h2>
-        <p>Jos haluat vaihtaa salasanasi, klikkaa alla olevaa painiketta:</p>
-        <a href="index.php?page=change_password_form" class="btn btn-warning">Vaihda salasana</a>
+        <h2>Change Password</h2>
+        <p>If you want to change your password, click the button below:</p>
+        <a href="index.php?page=change_password_form" class="btn btn-secondary">Change Password</a>
     </div>
 
-    <!-- Tilaushistoria -->
+    <!-- Order history -->
     <div class="order-history">
-        <h2>Tilaushistoria</h2>
+        <h2>Order History</h2>
         <?php if (empty($orders)): ?>
-            <p>Ei tilaushistoriaa.</p>
+            <p>No order history.</p>
         <?php else: ?>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Tilauksen ID</th>
-                        <th>Kokonais summa</th>
+                        <th>Order ID</th>
+                        <th>Total Amount</th>
                         <th>Status</th>
-                        <th>Toimitustapa</th>
-                        <th>Tilauspäivämäärä</th>
-                        <th>Yksityiskohdat</th>
+                        <th>Delivery Method</th>
+                        <th>Order Date</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -116,7 +113,7 @@ mysqli_close($link);
                             <td><?php echo ucfirst($order['status']); ?></td>
                             <td><?php echo ucfirst($order['delivery_method']); ?></td>
                             <td><?php echo $order['created_at']; ?></td>
-                            <td><a href="index.php?page=order_details&order_id=<?php echo $order['order_id']; ?>" class="btn btn-info btn-sm">Näytä</a></td>
+                            <td><a href="index.php?page=order_details&order_id=<?php echo $order['order_id']; ?>" class="btn btn-info btn-sm">View</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -127,12 +124,12 @@ mysqli_close($link);
     <!-- Logout -->
     <div class="logout">
         <form action="content/logout.php" method="post">
-            <button type="submit" class="btn btn-danger">Kirjaudu ulos</button>
+            <button type="submit" class="btn btn-danger">Log Out</button>
         </form>
     </div>
 </div>
 
-<!-- JavaScript muokkauksen mahdollistamiseen -->
+<!-- JavaScript to enable editing -->
 <script>
 function enableEdit() {
     document.getElementById('first_name_display').style.display = 'none';
@@ -154,6 +151,7 @@ function enableEdit() {
     document.getElementById('saveButton').style.display = 'inline';
 }
 </script>
+
 
 <style>
     /* Yleinen asettelu */

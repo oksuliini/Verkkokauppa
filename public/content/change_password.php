@@ -1,17 +1,16 @@
 <?php
 session_start();
-require_once '../../config/config.php'; // Lataa tietokantayhteyden asetukset
+require_once '../../config/config.php';
 
 // Luo tietokantayhteys
-$conn = getDbConnection(); // Kutsu funktiota saadaksesi yhteys
+$conn = getDbConnection();
 
 // Tarkista, onko käyttäjä kirjautunut sisään
 if (!isset($_SESSION['SESS_USER_ID'])) {
-    header("Location: ../index.php?page=login");
+    echo "<script>alert('You must be logged in.'); window.location.href = '../index.php?page=login';</script>";
     exit();
 }
 
-// Hae käyttäjän ID istunnosta ja varmista, että se on kokonaisluku
 $user_id = (int) $_SESSION['SESS_USER_ID'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,49 +18,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_password = trim($_POST['new_password']);
     $confirm_password = trim($_POST['confirm_password']);
 
-    // Tarkista, että uusi salasana ja varmistus täsmäävät
     if ($new_password !== $confirm_password) {
-        die("Error: New passwords do not match!");
+        echo "<script>alert('Error: New passwords do not match!'); window.history.back();</script>";
+        exit();
     }
 
-    // Varmista, että uusi salasana on vähintään 6 merkkiä pitkä
-    if (strlen($new_password) < 6) {
-        die("Error: New password must be at least 6 characters long!");
-    }
-
-    // Hae käyttäjän nykyinen salasana tietokannasta
+    // Hae nykyinen salasana
     $stmt = $conn->prepare("SELECT password FROM users WHERE user_id = ?");
     if (!$stmt) {
-        die("Database error: " . $conn->error);
+        echo "<script>alert('Database error.'); window.history.back();</script>";
+        exit();
     }
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $stmt->bind_result($hashed_password);
-    
+
     if (!$stmt->fetch()) {
-        die("Error: User not found!");
+        echo "<script>alert('Error: User not found!'); window.history.back();</script>";
+        exit();
     }
     $stmt->close();
 
-    // Tarkista, vastaako annettu salasana tallennettua hashia
+    // Tarkista nykyinen salasana
     if (!password_verify($current_password, $hashed_password)) {
-        die("Error: Incorrect current password!");
+        echo "<script>alert('Error: Incorrect current password!'); window.history.back();</script>";
+        exit();
     }
 
-    // Luo hash uudelle salasanalle
+    // Päivitä salasana
     $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-
-    // Päivitä salasana tietokantaan
     $stmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
     if (!$stmt) {
-        die("Database error: " . $conn->error);
+        echo "<script>alert('Database error while updating password.'); window.history.back();</script>";
+        exit();
     }
     $stmt->bind_param("si", $new_hashed_password, $user_id);
 
     if ($stmt->execute()) {
-        echo "Success: Password changed successfully!";
+        echo "<script>alert('Password changed successfully!'); window.location.href = '../index.php?page=profile';</script>";
     } else {
-        echo "Error: Failed to update password.";
+        echo "<script>alert('Error: Failed to update password.'); window.history.back();</script>";
     }
 
     $stmt->close();

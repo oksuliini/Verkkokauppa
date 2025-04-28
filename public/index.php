@@ -24,14 +24,14 @@ if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
     header("Location: index.php?page=login");
     exit();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello Kitty Online Store</title>
+    <title>Hello Kitty Web Store</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -40,10 +40,8 @@ if (in_array($page, $restrictedPages) && !isset($_SESSION['SESS_USER_ID'])) {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <!-- Include Navigation Bar -->
     <?php include("partials/navbar.php"); ?>
-
     <div class="content">
         <?php
         // Dynamically load the page content based on the 'page' query parameter

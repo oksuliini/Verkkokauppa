@@ -38,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+if ($_FILES["image"]["error"] !== UPLOAD_ERR_OK) {
+    die("Upload error: " . $_FILES["image"]["error"]);
+}
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
         $image_url = "images/" . $imageName; // Suhteellinen polku kuvalle
     } else {
